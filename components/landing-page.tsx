@@ -330,8 +330,8 @@ export function LandingPage() {
                 <Link href="/features" className="block text-gray-400 hover:text-white">
                   Features
                 </Link>
-                <Link href="/api" className="block text-gray-400 hover:text-white">
-                  API
+                <Link href="/docs" className="block text-gray-400 hover:text-white">
+                  Documentation
                 </Link>
               </div>
             </div>
@@ -343,9 +343,6 @@ export function LandingPage() {
                 </Link>
                 <Link href="/contact" className="block text-gray-400 hover:text-white">
                   Contact
-                </Link>
-                <Link href="/careers" className="block text-gray-400 hover:text-white">
-                  Careers
                 </Link>
               </div>
             </div>

@@ -38,9 +38,7 @@ next-env.d.ts
 # Docker
 .env.docker
 
-# Database backups
-/backups/*.sql
-/backups/*.dump
+
 
 # Logs
 logs
