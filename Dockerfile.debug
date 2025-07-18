@@ -1,0 +1,14 @@
+FROM node:18-alpine
+WORKDIR /app
+
+# Copy the standalone build
+COPY .next/standalone ./
+
+# Debug: List all files
+RUN echo "=== Contents of /app ===" && ls -la /app/
+RUN echo "=== Looking for server.js ===" && find /app -name "server.js" -type f
+RUN echo "=== Contents of .next directory ===" && ls -la /app/.next/ || echo "No .next directory"
+RUN echo "=== All files recursively ===" && find /app -type f | head -20
+
+# Try to run the server
+CMD ["node", "server.js"]
