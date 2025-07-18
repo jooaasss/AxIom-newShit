@@ -33,8 +33,8 @@ export async function POST(req: Request) {
       })
     }
 
-    // Check if user has enough credits
-    if (dbUser.credits < 2) { // Code generation costs 2 credits
+    // Check if user has enough credits (skip check for unlimited users)
+    if (!dbUser.hasUnlimitedCredits && dbUser.credits < 2) { // Code generation costs 2 credits
       return new NextResponse("Insufficient credits", { status: 402 })
     }
 
@@ -67,11 +67,13 @@ exampleFunction();
       },
     })
 
-    // Deduct credits
-    await prisma.user.update({
-      where: { id: dbUser.id },
-      data: { credits: { decrement: 2 } },
-    })
+    // Deduct credits (only for non-unlimited users)
+    if (!dbUser.hasUnlimitedCredits) {
+      await prisma.user.update({
+        where: { id: dbUser.id },
+        data: { credits: { decrement: 2 } },
+      })
+    }
 
     return NextResponse.json(generation)
   } catch (error) {

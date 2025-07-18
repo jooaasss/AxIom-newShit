@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 import { cn } from '@/lib/utils'
 
 interface MainNavProps {
@@ -10,6 +11,7 @@ interface MainNavProps {
 
 export function MainNav({ className }: MainNavProps) {
   const pathname = usePathname()
+  const { user } = useUser()
   
   const routes = [
     {
@@ -33,6 +35,15 @@ export function MainNav({ className }: MainNavProps) {
       active: pathname === '/settings',
     },
   ]
+
+  // Add admin route for dw_940 user
+  if (user?.emailAddresses?.[0]?.emailAddress === 'kalitestakk@gmail.com') {
+    routes.push({
+      href: '/admin',
+      label: 'Admin',
+      active: pathname === '/admin',
+    })
+  }
 
   return (
     <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)}>

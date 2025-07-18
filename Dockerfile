@@ -31,8 +31,13 @@ COPY prisma/ ./prisma/
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
-# Generate Prisma client
-RUN npx prisma generate
+# Create mock Prisma client for build
+RUN mkdir -p node_modules/.prisma/client && \
+    echo 'class PrismaClient { constructor() {} } module.exports = { PrismaClient };' > node_modules/.prisma/client/index.js && \
+    echo 'const { PrismaClient } = require("./index.js"); module.exports = { PrismaClient };' > node_modules/.prisma/client/default.js
+
+# Set environment variables for Prisma
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -65,6 +70,9 @@ ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
+# Set Prisma environment variables for runtime
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -96,4 +104,4 @@ ENV PORT=3000
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 npx prisma generate && node server.js"]

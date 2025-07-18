@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
       })
     ])
 
-    const formattedChats = chats.map(chat => ({
+    const formattedChats = chats.map((chat: any) => ({
       id: chat.id,
       name: chat.name,
       provider: chat.provider,
