@@ -37,7 +37,8 @@ export function ProviderSelector({
   const [providers, setProviders] = useState<Provider[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [apiType, setApiType] = useState<'service' | 'user'>('service')
+  const [apiType, setApiType] = useState<'service' | 'user'>('user')
+  const [hoveredProvider, setHoveredProvider] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -144,14 +145,14 @@ export function ProviderSelector({
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            <h3 className="text-lg font-semibold">Select AI Provider</h3>
+            <h3 className="text-lg font-semibold">Выберите ИИ</h3>
           </div>
           <div className="flex items-center gap-1 bg-muted rounded-xl p-1">
             <Button
               variant={apiType === 'service' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setApiType('service')}
-              className="h-7 px-2 text-xs rounded-lg whitespace-nowrap"
+              className="h-7 px-2 text-sm rounded-lg whitespace-nowrap"
             >
               <Server className="w-3 h-3 mr-1" />
               Service API
@@ -160,7 +161,7 @@ export function ProviderSelector({
               variant={apiType === 'user' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setApiType('user')}
-              className="h-7 px-2 text-xs rounded-lg whitespace-nowrap"
+              className="h-7 px-2 text-sm rounded-lg whitespace-nowrap"
             >
               <User className="w-3 h-3 mr-1" />
               User API
@@ -171,7 +172,7 @@ export function ProviderSelector({
         {error || providers.length === 0 ? (
           renderErrorOrEmptyState()
         ) : (
-          <div className={`${providers.length > 6 ? 'space-y-1 group' : 'space-y-3'}`}>
+          <div className="space-y-1 group">
             {providers.map((provider) => (
               <Card
                 key={provider.id}
@@ -179,41 +180,37 @@ export function ProviderSelector({
                   selectedProvider === provider.id
                     ? 'ring-2 ring-primary border-primary'
                     : 'hover:border-primary/50'
-                } ${
-                  providers.length > 6
-                    ? 'hover:scale-105 hover:shadow-lg group-hover:[&:not(:hover)]:scale-95 group-hover:[&:not(:hover)]:opacity-70'
-                    : 'hover:shadow-md'
-                }`}
+                } hover:scale-105 hover:shadow-md hover:z-10 group-hover:[&:not(:hover)]:scale-95 group-hover:[&:not(:hover)]:opacity-70`}
                 onClick={() => handleProviderSelect(provider)}
               >
-                <CardContent className={`${providers.length > 6 ? 'p-3' : 'p-4'}`}>
-                  <div className="flex items-center space-x-3">
-                    <div className={`${providers.length > 6 ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-lg'} rounded-lg bg-gradient-to-br ${provider.color} flex items-center justify-center text-white shrink-0 transition-all duration-300`}>
+                <CardContent className="p-2">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-7 h-7 text-sm rounded-md bg-gradient-to-br ${provider.color} flex items-center justify-center text-white shrink-0 transition-all duration-300`}>
                       {provider.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium ${providers.length > 6 ? 'text-sm' : ''}`}>{provider.name}</h4>
-                      <p className={`text-muted-foreground ${providers.length > 6 ? 'text-xs' : 'text-sm'}`}>
+                      <h4 className="font-medium text-sm">{provider.name}</h4>
+                      <p className="text-muted-foreground text-sm truncate">
                         {provider.description}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1 shrink-0">
                       {/* Статус провайдера */}
-                      <div className={`${providers.length > 6 ? 'w-5 h-5' : 'w-6 h-6'} rounded-full flex items-center justify-center ${
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-all duration-200 ${
                         provider.available 
-                          ? 'bg-green-500' 
-                          : 'bg-red-500'
+                          ? 'bg-green-500 shadow-green-500/30 shadow-sm' 
+                          : 'bg-red-500 shadow-red-500/30 shadow-sm'
                       }`}>
                         {provider.available ? (
-                          <Check className={`${providers.length > 6 ? 'w-3 h-3' : 'w-4 h-4'} text-white`} />
+                          <Check className="w-2.5 h-2.5 text-white" />
                         ) : (
-                          <X className={`${providers.length > 6 ? 'w-3 h-3' : 'w-4 h-4'} text-white`} />
+                          <X className="w-2.5 h-2.5 text-white" />
                         )}
                       </div>
                       {/* Selected badge */}
                       {selectedProvider === provider.id && (
-                        <Badge variant="default" className={`${providers.length > 6 ? 'text-xs px-2 py-0' : ''}`}>
-                          Selected
+                        <Badge variant="default" className="text-sm px-1.5 py-0 h-4 animate-pulse">
+                          ✓
                         </Badge>
                       )}
                     </div>
@@ -227,7 +224,7 @@ export function ProviderSelector({
 
       {selectedProviderData && selectedProviderData.models.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-3">Select Model</h3>
+          <h3 className="text-lg font-semibold mb-3">Выберите модель</h3>
           <div className="flex flex-wrap gap-2">
             {selectedProviderData.models.map((model) => (
               <Button
@@ -235,7 +232,7 @@ export function ProviderSelector({
                 variant={selectedModel === model ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => onModelChange(model)}
-                className="text-xs"
+                className="text-sm"
               >
                 {model}
               </Button>

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Loader, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
+import { Loader, ExternalLink, CheckCircle, XCircle, RefreshCw } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import Link from 'next/link'
 
@@ -25,6 +25,7 @@ interface ProviderStatus {
   textProviders: Provider[]
   imageProviders: Provider[]
   loading: boolean
+  statusLoading: boolean
 }
 
 export default function ProvidersPage() {
@@ -33,6 +34,7 @@ export default function ProvidersPage() {
     textProviders: [],
     imageProviders: [],
     loading: true,
+    statusLoading: false,
   })
 
   useEffect(() => {
@@ -43,11 +45,15 @@ export default function ProvidersPage() {
           axios.get('/api/providers?type=image'),
         ])
 
-        setStatus({
+        setStatus(prev => ({
+          ...prev,
           textProviders: textResponse.data.providers,
           imageProviders: imageResponse.data.providers,
           loading: false,
-        })
+        }))
+        
+        // Check provider status
+        await checkProviderStatus()
       } catch (error) {
         console.error('Failed to fetch providers:', error)
         toast({
@@ -61,6 +67,30 @@ export default function ProvidersPage() {
 
     fetchProviders()
   }, [])
+
+  const checkProviderStatus = async () => {
+    setStatus(prev => ({ ...prev, statusLoading: true }))
+    try {
+      const statusResponse = await axios.get('/api/providers/status?apiType=service')
+      const providerStatuses = statusResponse.data.providers
+      
+      setStatus(prev => ({
+        ...prev,
+        textProviders: prev.textProviders.map(provider => {
+          const statusInfo = providerStatuses.find((s: any) => s.id === provider.id)
+          return statusInfo ? { ...provider, available: statusInfo.available } : provider
+        }),
+        imageProviders: prev.imageProviders.map(provider => {
+          const statusInfo = providerStatuses.find((s: any) => s.id === provider.id)
+          return statusInfo ? { ...provider, available: statusInfo.available } : provider
+        }),
+        statusLoading: false,
+      }))
+    } catch (error) {
+      console.error('Failed to check provider status:', error)
+      setStatus(prev => ({ ...prev, statusLoading: false }))
+    }
+  }
 
   const testProvider = async (providerId: string, type: 'text' | 'image') => {
     try {
@@ -157,10 +187,23 @@ export default function ProvidersPage() {
     <div className="container mx-auto py-10 space-y-8">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">AI Providers</h1>
-        <p className="text-muted-foreground">
-          Manage and test your AI provider integrations. Configure API keys in your environment variables.
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">AI Providers</h1>
+            <p className="text-muted-foreground">
+              Manage and test your AI provider integrations. Configure API keys in your environment variables.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={checkProviderStatus}
+            disabled={status.statusLoading}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${status.statusLoading ? 'animate-spin' : ''}`} />
+            Check Status
+          </Button>
+        </div>
       </div>
 
       {/* Provider Status Overview */}
@@ -258,10 +301,12 @@ export default function ProvidersPage() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>Setup Instructions</span>
-            <ExternalLink className="h-4 w-4" />
+            <Link href="/settings" className="inline-flex items-center">
+              <ExternalLink className="h-4 w-4 hover:text-primary transition-colors cursor-pointer" />
+            </Link>
           </CardTitle>
           <CardDescription>
-            Configure your AI provider API keys in environment variables
+            Configure your own AI provider API keys. When you use your own keys, site credits won't be consumed.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

@@ -57,9 +57,9 @@ const plans = {
 }
 
 const creditPackages = [
-  { amount: 100, price: 10, popular: false },
-  { amount: 500, price: 40, popular: true },
-  { amount: 1000, price: 70, popular: false },
+  { amount: 100, price: 7, popular: false },
+  { amount: 500, price: 15, popular: true },
+  { amount: 1000, price: 40, popular: false },
 ]
 
 export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProps) {

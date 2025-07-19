@@ -52,7 +52,7 @@ export default function PricingPage() {
             <ul className="space-y-2">
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4 text-green-500" />
-                <span>5 free generations</span>
+                <span>10 free generations</span>
               </li>
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4 text-green-500" />
@@ -136,7 +136,7 @@ export default function PricingPage() {
             <CardDescription>
               Buy credits for occasional use
             </CardDescription>
-            <div className="mt-4 text-4xl font-bold">$10</div>
+            <div className="mt-4 text-4xl font-bold">$7</div>
             <p className="text-sm text-muted-foreground">for 100 credits</p>
           </CardHeader>
           <CardContent className="flex-1">
@@ -151,11 +151,11 @@ export default function PricingPage() {
               </li>
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4 text-green-500" />
-                <span>Image: 3 credits per generation</span>
+                <span>AI Search: 3 credits per generation</span>
               </li>
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4 text-green-500" />
-                <span>Website: 5 credits per generation</span>
+                <span>Image: 5 credits per generation</span>
               </li>
               <li className="flex items-center">
                 <Check className="mr-2 h-4 w-4 text-green-500" />

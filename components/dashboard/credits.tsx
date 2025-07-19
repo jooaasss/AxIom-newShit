@@ -42,7 +42,7 @@ export function CreditsDisplay() {
       <CardContent className="p-4">
         <div className="flex items-center justify-between space-x-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
               <Coins className="h-5 w-5 text-white" />
             </div>
             <div className="space-y-1">
@@ -50,12 +50,12 @@ export function CreditsDisplay() {
                 <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">
                   {loading ? 'Loading...' : `${credits ?? 0}`}
                 </p>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-sm">
                   <Sparkles className="h-3 w-3 mr-1" />
                   Credits
                 </Badge>
               </div>
-              <p className={`text-xs font-medium ${color}`}>
+              <p className={`text-sm font-medium ${color}`}>
                 {status} • Available for AI generations
               </p>
             </div>

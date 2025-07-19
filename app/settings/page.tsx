@@ -299,8 +299,8 @@ export default function SettingsPage() {
             <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
               <li>Text generation: 1 credit</li>
               <li>Code generation: 2 credits</li>
-              <li>Image generation: 3 credits</li>
-              <li>Website generation: 5 credits</li>
+              <li>AI Search: 3 credits</li>
+              <li>Image generation: 5 credits</li>
             </ul>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
@@ -310,7 +310,7 @@ export default function SettingsPage() {
               className="w-full"
               variant="outline"
             >
-              100 Credits - $10
+              100 Credits - $7
             </Button>
             <Button 
               onClick={() => handleBuyCredits(500)} 
@@ -318,14 +318,14 @@ export default function SettingsPage() {
               className="w-full"
               variant="outline"
             >
-              500 Credits - $40 (20% off)
+              500 Credits - $15 (20% off)
             </Button>
             <Button 
               onClick={() => handleBuyCredits(1000)} 
               disabled={isLoading}
               className="w-full"
             >
-              1000 Credits - $70 (30% off)
+              1000 Credits - $40 (30% off)
             </Button>
           </CardFooter>
         </Card>

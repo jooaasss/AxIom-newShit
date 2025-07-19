@@ -32,8 +32,8 @@ const PROVIDER_COLORS: Record<string, string> = {
 }
 
 const SIZE_CLASSES = {
-  sm: 'w-6 h-6',
-  md: 'w-8 h-8',
+  sm: 'w-7 h-7',
+  md: 'w-7 h-7',
   lg: 'w-12 h-12',
 }
 

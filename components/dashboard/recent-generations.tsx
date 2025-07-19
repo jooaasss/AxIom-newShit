@@ -85,7 +85,7 @@ export function RecentGenerations() {
         <CardContent className="flex h-40 flex-col items-center justify-center text-center">
           <History className="h-12 w-12 text-muted-foreground mb-4" />
           <p className="text-sm font-medium text-muted-foreground mb-1">No generations yet</p>
-          <p className="text-xs text-muted-foreground">Your recent AI generations will appear here</p>
+          <p className="text-sm text-muted-foreground">Your recent AI generations will appear here</p>
         </CardContent>
       </Card>
     )
@@ -102,7 +102,7 @@ export function RecentGenerations() {
                   <div className="flex items-center justify-between p-4 rounded-lg border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-md transition-all duration-200 group-hover:scale-[1.01]">
                     <div className="flex items-center space-x-4 flex-1 min-w-0">
                       <div className="flex-shrink-0">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getTypeColors(generation.type)}`}>
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${getTypeColors(generation.type)}`}>
                           {getTypeIcon(generation.type)}
                         </div>
                       </div>
@@ -111,11 +111,11 @@ export function RecentGenerations() {
                         <div className="flex items-center space-x-3">
                           <Badge 
                             variant="outline" 
-                            className={`capitalize text-xs ${getTypeColors(generation.type)}`}
+                            className={`capitalize text-sm ${getTypeColors(generation.type)}`}
                           >
                             {generation.type} Generation
                           </Badge>
-                          <div className="flex items-center text-xs text-muted-foreground">
+                          <div className="flex items-center text-sm text-muted-foreground">
                             <Clock className="h-3 w-3 mr-1" />
                             {formatDistanceToNow(new Date(generation.createdAt), { addSuffix: true, locale: ru })}
                           </div>
@@ -128,7 +128,7 @@ export function RecentGenerations() {
                     </div>
                     
                     <div className="flex-shrink-0 ml-4">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
+                      <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
                         <ArrowRight className="h-4 w-4" />
                       </div>
                     </div>

@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
 import { PHProvider } from "@/components/providers/posthog-provider"
+import { AdminStatusProvider } from "@/components/admin-status-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -63,8 +64,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children}
-              <Toaster richColors position="top-right" />
+              <AdminStatusProvider>
+                {children}
+                <Toaster richColors position="top-right" />
+              </AdminStatusProvider>
             </ThemeProvider>
           </PHProvider>
         </body>

@@ -15,21 +15,19 @@ import { ProviderAvatar } from '@/components/ui/provider-avatar'
 import { Copy, User, Bot } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useUser } from '@clerk/nextjs'
-
-interface Message {
-  id: string
-  type: 'user' | 'assistant' | 'error'
-  content: string
-  timestamp: Date
-}
+import { useChatHistory, type Message } from '@/hooks/use-chat-history'
+import { TextContainer } from '@/components/ui/text-container'
 
 export default function TextPage() {
-  const router = useRouter()
   const [prompt, setPrompt] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
   const [selectedModel, setSelectedModel] = useState<string | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [responseTime, setResponseTime] = useState<string | undefined>(undefined)
+  const { getMessages, addMessage, addMessages, clearMessages } = useChatHistory()
+  
+  // Получаем сообщения для текущего провайдера и модели
+  const messages = getMessages(selectedProvider, selectedModel)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { user } = useUser()
 
@@ -56,10 +54,11 @@ export default function TextPage() {
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, userMessage])
-    setIsLoading(true)
+    addMessage(selectedProvider, selectedModel, userMessage)
+    setLoading(true)
     setPrompt('')
     
+    const startTime = Date.now()
     const result = await makeApiRequest(
       () => apiClient.post('/api/generate/text', { 
         prompt,
@@ -71,8 +70,11 @@ export default function TextPage() {
         customErrorMessage: 'Не удалось сгенерировать текст. Попробуйте еще раз.',
       }
     )
+    const endTime = Date.now()
+    const duration = ((endTime - startTime) / 1000).toFixed(1)
+    setResponseTime(`${duration}s`)
     
-    setIsLoading(false)
+    setLoading(false)
     
     if (result) {
       const assistantMessage: Message = {
@@ -81,7 +83,7 @@ export default function TextPage() {
         content: result.data.content || '',
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, assistantMessage])
+      addMessage(selectedProvider, selectedModel, assistantMessage)
       toast.success('Текст успешно сгенерирован!')
     } else {
       const errorMessage: Message = {
@@ -90,7 +92,7 @@ export default function TextPage() {
         content: 'Не удалось сгенерировать текст. Попробуйте еще раз.',
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, errorMessage])
+      addMessage(selectedProvider, selectedModel, errorMessage)
     }
   }
 
@@ -100,17 +102,20 @@ export default function TextPage() {
   }
 
   const handleClearChat = () => {
-    setMessages([])
+    clearMessages(selectedProvider, selectedModel)
     setPrompt('')
+    toast.success('Chat history cleared')
   }
 
   const handleProviderChange = (provider: string) => {
     setSelectedProvider(provider)
+    setLoading(false) // Сбрасываем состояние загрузки при смене провайдера
     // Не отправляем автоматический запрос при смене провайдера
   }
 
   const handleModelChange = (model: string) => {
     setSelectedModel(model)
+    setLoading(false) // Сбрасываем состояние загрузки при смене модели
     // Не отправляем автоматический запрос при смене модели
   }
 
@@ -158,77 +163,87 @@ export default function TextPage() {
             </CardHeader>
             
             <CardContent className="flex-1 flex flex-col space-y-4">
-              {/* Область сообщений с фиксированной высотой */}
-              <div className="flex-1 min-h-0">
-                <ScrollArea className="h-full border rounded-lg bg-muted/30">
-                  <div className="p-3 space-y-2">
-                    {messages.length === 0 ? (
-                      <div className="flex items-center justify-center h-24 text-muted-foreground text-sm">
-                        Начните диалог с ИИ
-                      </div>
-                    ) : (
-                      messages.map((message) => (
-                        <div key={message.id} className={`flex gap-2 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          {message.type !== 'user' && (
-                            message.type === 'error' ? (
-                              <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shrink-0">
-                                <Bot className="w-3 h-3 text-white" />
+              {/* Область сообщений */}
+              <div className="flex-1">
+                <div className="border border-muted/50 rounded-lg bg-muted/30 h-[600px]">
+                  <ScrollArea className="h-full p-3">
+                    <div className="space-y-2">
+                      {messages.length === 0 ? (
+                        <div className="flex items-center justify-center h-24 text-muted-foreground text-sm">
+                          Начните диалог с ИИ
+                        </div>
+                      ) : (
+                        messages.map((message) => (
+                          <div key={message.id} className={`flex gap-2 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            {message.type !== 'user' && (
+                              message.type === 'error' ? (
+                                <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shrink-0">
+                                  <Bot className="w-3 h-3 text-white" />
+                                </div>
+                              ) : (
+                                <ProviderAvatar provider={selectedProvider} size="sm" />
+                              )
+                            )}
+                            {message.type === 'assistant' ? (
+                              <div className="max-w-[80%] flex-1">
+                                <TextContainer
+                  title=""
+                  content={message.content}
+                  showSlider={false}
+                  showCopyButton={true}
+                  className="mb-2 border-0 shadow-none bg-background"
+                  responseTime={responseTime}
+                />
+                                <div className="text-sm text-muted-foreground ml-4">
+                                  {message.timestamp.toLocaleTimeString()}
+                                </div>
                               </div>
                             ) : (
-                              <ProviderAvatar provider={selectedProvider} size="sm" />
-                            )
-                          )}
-                          <div className={`max-w-[75%] rounded-lg p-2 relative group ${
-                            message.type === 'user' 
-                              ? 'bg-primary text-primary-foreground ml-auto' 
-                              : message.type === 'error'
-                              ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                              : 'bg-background border'
-                          }`}>
-                            <div className="whitespace-pre-wrap text-xs leading-relaxed">
-                              {message.content}
-                            </div>
-                            {message.type !== 'user' && message.type !== 'error' && (
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                onClick={() => handleCopy(message.content)}
-                                className="absolute top-1 right-1 h-5 w-5 p-0 opacity-0 group-hover:opacity-70 hover:opacity-100 transition-opacity"
-                              >
-                                <Copy className="h-2.5 w-2.5" />
-                              </Button>
+                              <div className={`max-w-[75%] rounded-lg p-2 relative group ${
+                                message.type === 'user' 
+                                  ? 'bg-primary text-primary-foreground ml-auto' 
+                                  : message.type === 'error'
+                                  ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                  : 'bg-background border border-muted/50'
+                              }`}>
+                                <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                                  {message.content}
+                                </div>
+                              </div>
+                            )}
+                            {message.type === 'user' && (
+                              user?.imageUrl ? (
+                                <img
+                                  src={user.imageUrl}
+                  alt="User avatar"
+                  className="w-7 h-7 rounded-full object-cover shrink-0"
+                                />
+                              ) : (
+                                <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center shrink-0">
+                                  <span className="text-sm text-primary-foreground font-medium">
+                                    {user?.firstName?.[0] || user?.emailAddresses?.[0]?.emailAddress?.[0] || 'U'}
+                                  </span>
+                                </div>
+                              )
                             )}
                           </div>
-                          {message.type === 'user' && (
-                            user?.imageUrl ? (
-                              <img 
-                                src={user.imageUrl} 
-                                alt="User avatar"
-                                className="w-6 h-6 rounded-full object-cover shrink-0"
-                              />
-                            ) : (
-                              <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shrink-0">
-                                <User className="w-3 h-3 text-white" />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      ))
-                    )}
-                    {isLoading && (
-                      <div className="flex gap-2 justify-start">
-                        <ProviderAvatar provider={selectedProvider} size="sm" />
-                        <div className="bg-background border rounded-lg p-2">
-                          <div className="flex items-center gap-2">
-                            <Loader className="h-3 w-3 animate-spin" />
-                            <span className="text-xs text-muted-foreground">Генерирую ответ...</span>
+                        ))
+                      )}
+                      {loading && (
+                        <div className="flex gap-2 justify-start">
+                          <ProviderAvatar provider={selectedProvider} size="sm" />
+                          <div className="bg-background border border-muted/50 rounded-lg p-2">
+                            <div className="flex items-center gap-2">
+                              <Loader className="h-3 w-3 animate-spin" />
+                              <span className="text-sm text-muted-foreground">Генерирую ответ...</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </ScrollArea>
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  </ScrollArea>
+                </div>
               </div>
               
               {/* Форма ввода снизу */}
@@ -240,7 +255,7 @@ export default function TextPage() {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     rows={3}
-                    disabled={isLoading}
+                    disabled={loading}
                     className="resize-none"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
@@ -250,8 +265,8 @@ export default function TextPage() {
                     }}
                   />
                 </div>
-                <Button type="submit" disabled={isLoading || !prompt.trim() || !selectedProvider} className="w-full">
-                  {isLoading ? (
+                <Button type="submit" disabled={loading || !prompt.trim() || !selectedProvider} className="w-full">
+                  {loading ? (
                     <>
                       <Loader className="mr-2 h-4 w-4" />
                       Генерация...
