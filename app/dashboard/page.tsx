@@ -19,12 +19,20 @@ export default async function DashboardPage() {
   }
 
   // Получаем данные пользователя для проверки прав администратора
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: { isAdmin: true }
-  })
-
-  const isAdmin = user?.isAdmin || false
+  let isAdmin = false
+  
+  if (prisma) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { clerkId: userId },
+        select: { isAdmin: true }
+      })
+      isAdmin = user?.isAdmin || false
+    } catch (error) {
+      console.error('Database connection error:', error)
+      // Продолжаем работу без данных из БД
+    }
+  }
 
   return (
     <div className="flex-1 space-y-8 p-6 bg-gradient-to-br from-background via-background to-muted/20">

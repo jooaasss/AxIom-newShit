@@ -65,7 +65,7 @@ export default function FeaturesPage() {
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Polniy
+                AxIom
               </span>
             </Link>
         </div>
@@ -114,7 +114,7 @@ export default function FeaturesPage() {
 
         {/* Advantages */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Why Choose Polniy?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Why Choose AxIom?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {advantages.map((advantage, index) => {
               const Icon = advantage.icon
@@ -224,7 +224,7 @@ export default function FeaturesPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of creators who are already using Polniy to transform their ideas into reality.
+            Join thousands of creators who are already using AxIom to transform their ideas into reality.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>

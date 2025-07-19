@@ -53,7 +53,7 @@ export async function GET() {
           price_data: {
             currency: 'USD',
             product_data: {
-              name: 'Polniy Pro',
+              name: 'AxIom Pro',
               description: 'Unlimited AI generations',
             },
             unit_amount: 2000, // $20.00

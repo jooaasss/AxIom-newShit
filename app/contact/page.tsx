@@ -10,7 +10,7 @@ export default function ContactPage() {
       icon: Mail,
       title: "Email Support",
       description: "Get help with your account, billing, or technical issues",
-      contact: "support@polniy.com",
+      contact: "support@AxIom.com",
       response: "Within 24 hours"
     },
     {
@@ -31,7 +31,7 @@ export default function ContactPage() {
       icon: HelpCircle,
       title: "Help Center",
       description: "Browse our comprehensive knowledge base",
-      contact: "help.polniy.com",
+      contact: "help.AxIom.com",
       response: "24/7 availability"
     }
   ]
@@ -59,25 +59,25 @@ export default function ContactPage() {
       icon: Users,
       title: "General Support",
       description: "Account questions, billing inquiries, and general help",
-      email: "support@polniy.com"
+      email: "support@AxIom.com"
     },
     {
       icon: Zap,
       title: "Technical Support",
       description: "API issues, integration help, and technical troubleshooting",
-      email: "tech@polniy.com"
+      email: "tech@AxIom.com"
     },
     {
       icon: Users,
       title: "Enterprise Sales",
       description: "Custom solutions, enterprise pricing, and partnerships",
-      email: "sales@polniy.com"
+      email: "sales@AxIom.com"
     },
     {
       icon: MessageSquare,
       title: "Media Inquiries",
       description: "Press releases, interviews, and media partnerships",
-      email: "press@polniy.com"
+      email: "press@AxIom.com"
     }
   ]
 
@@ -91,7 +91,7 @@ export default function ContactPage() {
               <Zap className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Polniy
+              AxIom
             </span>
           </Link>
         </div>
@@ -227,7 +227,7 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How do I get started with Polniy?</CardTitle>
+                <CardTitle className="text-lg">How do I get started with AxIom?</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
@@ -275,11 +275,11 @@ export default function ContactPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Still Have Questions?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Our support team is standing by to help you get the most out of Polniy.
+            Our support team is standing by to help you get the most out of AxIom.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="mailto:support@polniy.com">Email Support</Link>
+              <Link href="mailto:support@AxIom.com">Email Support</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/docs">Browse Documentation</Link>

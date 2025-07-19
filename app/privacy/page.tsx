@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">
-              At Polniy, we are committed to protecting your privacy and ensuring the security of your personal information. 
+              At AxIom, we are committed to protecting your privacy and ensuring the security of your personal information. 
               This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you use our 
               AI-powered creation platform. By using our services, you agree to the collection and use of information in 
               accordance with this policy.
@@ -242,9 +242,9 @@ export default function PrivacyPolicyPage() {
               If you have any questions about this Privacy Policy or our data practices, please contact us:
             </p>
             <div className="space-y-2 text-sm">
-              <p><strong>Email:</strong> privacy@polniy.com</p>
+              <p><strong>Email:</strong> privacy@AxIom.com</p>
               <p><strong>Address:</strong> 123 Innovation Drive, San Francisco, CA 94105</p>
-              <p><strong>Data Protection Officer:</strong> dpo@polniy.com</p>
+              <p><strong>Data Protection Officer:</strong> dpo@AxIom.com</p>
             </div>
           </CardContent>
         </Card>
@@ -257,7 +257,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="mailto:privacy@polniy.com">Contact Privacy Team</Link>
+              <Link href="mailto:privacy@AxIom.com">Contact Privacy Team</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/contact">General Contact</Link>

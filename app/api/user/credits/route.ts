@@ -14,6 +14,11 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
+    if (!prisma) {
+      console.warn('Database not available, returning default credits')
+      return NextResponse.json({ credits: 10 })
+    }
+
     // Find user by clerkId first
     let dbUser = await prisma.user.findUnique({
       where: {
@@ -60,6 +65,6 @@ export async function GET() {
     return NextResponse.json({ credits: dbUser.credits })
   } catch (error) {
     console.error('[CREDITS_ERROR]', error)
-    return new NextResponse('Internal Error', { status: 500 })
+    return NextResponse.json({ credits: 10 })
   }
 }

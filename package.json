@@ -1,5 +1,5 @@
 {
-  "name": "try1",
+  "name": "axiom",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,12 +9,7 @@
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "docker:clean": "docker system prune -af"
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.7.0",

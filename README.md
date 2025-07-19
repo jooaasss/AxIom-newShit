@@ -1,107 +1,123 @@
-<<<<<<< HEAD
-# Polniy - AI-Powered Creation Platform
+# AxIom - AI-Powered Creation Platform
 
-A full-stack SaaS platform that offers AI-powered generation services including text, code, image, and website generation.
+AxIom is a comprehensive AI-powered platform that enables users to generate text, code, images, and websites using advanced artificial intelligence models.
 
 ## Features
 
-- 🔐 Authentication with Clerk
-- 💳 Payments with Stripe
-- 📊 Analytics with PostHog
-- 🎨 Text, Code, Image, and Website generation
-- 📱 Responsive UI with Tailwind CSS
-- 🌓 Light and Dark mode
-- 📜 Generation history and details
-- 💰 Credit system for generations
+- **Text Generation**: Create high-quality content with AI assistance
+- **Code Generation**: Generate code snippets and complete applications
+- **Image Creation**: Generate stunning visuals and artwork
+- **Website Building**: Create complete websites with AI
+- **Multi-Provider Support**: Integration with multiple AI providers
+- **User Management**: Secure authentication and user profiles
+- **Credit System**: Flexible usage tracking and billing
 
-## Tech Stack
-
-- **Framework**: Next.js 13 (App Router)
-- **Language**: TypeScript
-- **Auth**: Clerk
-- **Database**: Prisma with your preferred database
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **Payments**: Stripe
-- **Analytics**: PostHog
-- **AI Provider**: OpenAI
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 16+
+- Node.js 18+ 
 - npm or yarn
-- OpenAI API key
-- Clerk account
-- Stripe account
-- PostHog account (optional)
+- PostgreSQL database
 
 ### Installation
 
-1. Clone the repository
-
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ai-saas-platform.git
-cd ai-saas-platform
+git clone https://github.com/yourusername/axiom.git
+cd axiom
 ```
 
-2. Install dependencies
-
+2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Set up environment variables
-
+3. Set up environment variables:
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-Fill in the environment variables in `.env.local`
+Edit `.env` with your configuration:
+- Database connection string
+- AI provider API keys
+- Authentication secrets
+- Stripe keys (for payments)
 
-4. Set up the database
-
+4. Set up the database:
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-5. Run the development server
-
+5. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`
 
-## Project Structure
+## Environment Variables
 
-- `/app` - Next.js app router pages and API routes
-- `/components` - React components
-- `/lib` - Utility functions and shared code
-- `/prisma` - Prisma schema and migrations
-- `/public` - Static assets
+Create a `.env` file with the following variables:
 
-## API Routes
+```env
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/axiom"
 
-- `/api/agents/text` - Text generation
-- `/api/agents/code` - Code generation
-- `/api/agents/image` - Image generation
-- `/api/agents/website` - Website generation
-- `/api/generations` - Get all generations
-- `/api/generations/[id]` - Get a specific generation
-- `/api/stripe` - Create Stripe checkout session
-- `/api/webhook` - Stripe webhook handler
+# Authentication
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+
+# AI Providers
+OPENAI_API_KEY="your-openai-key"
+ANTHROPIC_API_KEY="your-anthropic-key"
+GOOGLE_API_KEY="your-google-key"
+
+# Payments
+STRIPE_SECRET_KEY="your-stripe-secret"
+STRIPE_PUBLISHABLE_KEY="your-stripe-publishable"
+STRIPE_WEBHOOK_SECRET="your-webhook-secret"
+```
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy
+
+### Other Platforms
+
+The application can be deployed on any platform that supports Next.js:
+- Netlify
+- Railway
+- Render
+- DigitalOcean App Platform
+
+## Tech Stack
+
+- **Framework**: Next.js 14
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI
+- **Payments**: Stripe
+- **AI Integration**: Multiple providers (OpenAI, Anthropic, Google, etc.)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-=======
-# polniy
-pizdes
->>>>>>> 4b2d976f947efe67f415a9e9336ece92dc22c003
+MIT License - see LICENSE file for details
+
+## Support
+
+For support, email support@axiom.com or join our Discord community.

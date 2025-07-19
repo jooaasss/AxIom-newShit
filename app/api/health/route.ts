@@ -1,18 +1,30 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Check database connection
-    await prisma.$queryRaw`SELECT 1`;
+    let databaseStatus = 'disconnected';
+    let appStatus = 'healthy';
+    
+    if (prisma) {
+      try {
+        // Check database connection
+        await prisma.$queryRaw`SELECT 1`;
+        databaseStatus = 'connected';
+      } catch (dbError) {
+        console.error('Database connection failed:', dbError);
+        appStatus = 'degraded';
+      }
+    } else {
+      console.warn('Prisma client not available');
+      appStatus = 'degraded';
+    }
     
     return NextResponse.json({
-      status: 'healthy',
+      status: appStatus,
       timestamp: new Date().toISOString(),
-      database: 'connected',
-      service: 'try1-app'
+      database: databaseStatus,
+      service: 'axiom-app'
     });
   } catch (error) {
     console.error('Health check failed:', error);
@@ -22,7 +34,7 @@ export async function GET() {
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
         database: 'disconnected',
-        service: 'try1-app',
+        service: 'axiom-app',
         error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

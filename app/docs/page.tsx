@@ -16,7 +16,7 @@ export default function DocumentationPage() {
               <Zap className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Polniy
+              AxIom
             </span>
           </Link>
         </div>
@@ -29,7 +29,7 @@ export default function DocumentationPage() {
             Documentation
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Complete guide to using Polniy's AI-powered creation platform. Learn how to generate text, code, images, and websites with our advanced tools.
+            Complete guide to using AxIom's AI-powered creation platform. Learn how to generate text, code, images, and websites with our advanced tools.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export default function DocumentationPage() {
               Quick Start Guide
             </CardTitle>
             <CardDescription>
-              Get up and running with Polniy in minutes
+              Get up and running with AxIom in minutes
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

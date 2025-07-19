@@ -13,6 +13,11 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
+    if (!prisma) {
+      console.warn('Database not available, returning empty generations')
+      return NextResponse.json([])
+    }
+
     const generations = await prisma.generation.findMany({
       where: {
         userId,
@@ -25,6 +30,6 @@ export async function GET() {
     return NextResponse.json(generations)
   } catch (error) {
     console.log('[GENERATIONS_GET]', error)
-    return new NextResponse('Internal Error', { status: 500 })
+    return NextResponse.json([])
   }
 }

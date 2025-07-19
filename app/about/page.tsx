@@ -55,7 +55,7 @@ export default function AboutPage() {
     {
       year: "2023",
       title: "Company Founded",
-      description: "Polniy was founded with the vision of making AI creation tools accessible to everyone."
+      description: "AxIom was founded with the vision of making AI creation tools accessible to everyone."
     },
     {
       year: "2024",
@@ -80,7 +80,7 @@ export default function AboutPage() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            About Polniy
+            About AxIom
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             We're on a mission to democratize AI-powered creation tools and empower everyone to bring their ideas to life.
@@ -94,7 +94,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              At Polniy, we believe that creativity should have no limits. Our platform combines the power of advanced AI with intuitive design to help creators, developers, and businesses transform their ideas into reality. Whether you're writing content, building applications, creating visuals, or designing websites, we provide the tools you need to succeed in the digital age.
+              At AxIom, we believe that creativity should have no limits. Our platform combines the power of advanced AI with intuitive design to help creators, developers, and businesses transform their ideas into reality. Whether you're writing content, building applications, creating visuals, or designing websites, we provide the tools you need to succeed in the digital age.
             </p>
           </CardContent>
         </Card>
@@ -169,7 +169,7 @@ export default function AboutPage() {
 
         {/* Stats */}
         <div className="mb-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
-          <h2 className="text-3xl font-bold text-center mb-12">Polniy by the Numbers</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">AxIom by the Numbers</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold mb-2">50K+</div>

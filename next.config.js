@@ -10,7 +10,6 @@ const nextConfig = {
     return 'build-' + Date.now()
   },
   poweredByHeader: false,
-  generateStaticParams: false,
   images: {
     domains: ['oaidalleapiprodscus.blob.core.windows.net'],
     remotePatterns: [

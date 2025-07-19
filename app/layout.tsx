@@ -10,26 +10,26 @@ import { AdminStatusProvider } from "@/components/admin-status-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Polniy - AI-Powered Creation Platform",
+  title: "AxIom - AI-Powered Creation Platform",
   description: "Generate text, images, code, and websites with advanced AI. The ultimate creative toolkit for modern creators.",
   keywords: "AI, artificial intelligence, text generation, image generation, code generation, website builder, creative tools",
-  authors: [{ name: "Polniy Team" }],
-  creator: "Polniy",
-  publisher: "Polniy",
+  authors: [{ name: "AxIom Team" }],
+  creator: "AxIom",
+  publisher: "AxIom",
   robots: "index, follow",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://polniy.com",
-    title: "Polniy - AI-Powered Creation Platform",
+    url: "https://AxIom.com",
+    title: "AxIom - AI-Powered Creation Platform",
     description: "Generate text, images, code, and websites with advanced AI. The ultimate creative toolkit for modern creators.",
-    siteName: "Polniy",
+    siteName: "AxIom",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polniy - AI-Powered Creation Platform",
+    title: "AxIom - AI-Powered Creation Platform",
     description: "Generate text, images, code, and websites with advanced AI. The ultimate creative toolkit for modern creators.",
-    creator: "@polniy",
+    creator: "@AxIom",
   },
 }
 

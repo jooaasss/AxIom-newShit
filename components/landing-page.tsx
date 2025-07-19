@@ -51,7 +51,7 @@ export function LandingPage() {
     {
       name: 'Sarah Chen',
       role: 'Content Creator',
-      content: 'Polniy has revolutionized my content creation process. I can generate high-quality articles in minutes!',
+      content: 'AxIom has revolutionized my content creation process. I can generate high-quality articles in minutes!',
       rating: 5,
     },
     {
@@ -78,7 +78,7 @@ export function LandingPage() {
               <Zap className="h-5 w-5 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Polniy
+              AxIom
             </span>
           </div>
 
@@ -254,7 +254,7 @@ export function LandingPage() {
                 Loved by Creators Worldwide
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                See what our users are saying about their experience with Polniy.
+                See what our users are saying about their experience with AxIom.
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
@@ -287,7 +287,7 @@ export function LandingPage() {
               Ready to Transform Your Ideas?
             </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-              Join thousands of creators who are already using Polniy to bring their visions to life.
+              Join thousands of creators who are already using AxIom to bring their visions to life.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" asChild className="text-lg px-8 py-6">
@@ -315,7 +315,7 @@ export function LandingPage() {
                 <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                   <Zap className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-2xl font-bold">Polniy</span>
+                <span className="text-2xl font-bold">AxIom</span>
               </div>
               <p className="text-gray-400">
                 AI-powered creation platform for the modern creator.
@@ -362,7 +362,7 @@ export function LandingPage() {
             </div>
           </div>
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Polniy. All rights reserved.</p>
+            <p>&copy; 2025 AxIom. All rights reserved.</p>
           </div>
         </div>
       </footer>

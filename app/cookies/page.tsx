@@ -103,7 +103,7 @@ export default function CookiePolicyPage() {
             Cookie Policy
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-            Learn how Polniy uses cookies and similar technologies to enhance your experience.
+            Learn how AxIom uses cookies and similar technologies to enhance your experience.
           </p>
           <Badge variant="secondary" className="text-sm">
             Last updated: {lastUpdated}
@@ -127,7 +127,7 @@ export default function CookiePolicyPage() {
               understanding how you use our platform.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              We use both first-party cookies (set by Polniy) and third-party cookies (set by our partners) to 
+              We use both first-party cookies (set by AxIom) and third-party cookies (set by our partners) to 
               deliver our services effectively. You have control over which cookies you accept.
             </p>
           </CardContent>
@@ -364,9 +364,9 @@ export default function CookiePolicyPage() {
               If you have questions about our use of cookies or this Cookie Policy, please contact us:
             </p>
             <div className="space-y-2 text-sm">
-              <p><strong>Email:</strong> privacy@polniy.com</p>
+              <p><strong>Email:</strong> privacy@AxIom.com</p>
               <p><strong>Address:</strong> 123 Innovation Drive, San Francisco, CA 94105</p>
-              <p><strong>Data Protection Officer:</strong> dpo@polniy.com</p>
+              <p><strong>Data Protection Officer:</strong> dpo@AxIom.com</p>
             </div>
           </CardContent>
         </Card>

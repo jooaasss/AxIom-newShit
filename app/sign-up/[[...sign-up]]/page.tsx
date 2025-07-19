@@ -21,7 +21,7 @@ export default function SignUpPage() {
               <Zap className="h-6 w-6 text-white" />
             </div>
             <span className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Polniy
+              AxIom
             </span>
           </Link>
           
@@ -66,7 +66,7 @@ export default function SignUpPage() {
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <span className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Polniy
+                AxIom
               </span>
             </Link>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">

@@ -13,7 +13,7 @@ export default function TermsOfServicePage() {
       title: "Acceptance of Terms",
       icon: FileText,
       content: [
-        "By accessing or using Polniy, you agree to be bound by these Terms",
+        "By accessing or using AxIom, you agree to be bound by these Terms",
         "You must be at least 18 years old to use our services",
         "If you disagree with any part of these terms, you may not use our services",
         "These terms apply to all users, including visitors and registered users"
@@ -103,7 +103,7 @@ export default function TermsOfServicePage() {
             Terms of Service
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-            These terms govern your use of Polniy's AI-powered creation platform and services.
+            These terms govern your use of AxIom's AI-powered creation platform and services.
           </p>
           <Badge variant="secondary" className="text-sm">
             Last updated: {lastUpdated}
@@ -117,8 +117,8 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">
-              Welcome to Polniy! These Terms of Service ("Terms") constitute a legally binding agreement between you and 
-              Polniy Inc. ("Company," "we," "us," or "our") regarding your use of our AI-powered creation platform and 
+              Welcome to AxIom! These Terms of Service ("Terms") constitute a legally binding agreement between you and 
+              AxIom Inc. ("Company," "we," "us," or "our") regarding your use of our AI-powered creation platform and 
               related services. Please read these Terms carefully before using our services. By creating an account or 
               using our platform, you acknowledge that you have read, understood, and agree to be bound by these Terms.
             </p>
@@ -188,7 +188,7 @@ export default function TermsOfServicePage() {
             <div>
               <h4 className="font-semibold mb-2">Our Rights</h4>
               <p className="text-muted-foreground text-sm mb-3">
-                Polniy owns all rights to our platform, technology, and proprietary algorithms. This includes our AI models, 
+                AxIom owns all rights to our platform, technology, and proprietary algorithms. This includes our AI models, 
                 user interface, and underlying software.
               </p>
             </div>
@@ -296,9 +296,9 @@ export default function TermsOfServicePage() {
               If you have questions about these Terms of Service, please contact us:
             </p>
             <div className="space-y-2 text-sm">
-              <p><strong>Email:</strong> legal@polniy.com</p>
+              <p><strong>Email:</strong> legal@AxIom.com</p>
               <p><strong>Address:</strong> 123 Innovation Drive, San Francisco, CA 94105</p>
-              <p><strong>Legal Department:</strong> terms@polniy.com</p>
+              <p><strong>Legal Department:</strong> terms@AxIom.com</p>
             </div>
           </CardContent>
         </Card>
@@ -311,7 +311,7 @@ export default function TermsOfServicePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="mailto:legal@polniy.com">Contact Legal Team</Link>
+              <Link href="mailto:legal@AxIom.com">Contact Legal Team</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/contact">General Support</Link>
