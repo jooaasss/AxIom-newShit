@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Code, Globe, Image, Text, Search, Settings, Shield, ArrowRight, Sparkles } from 'lucide-react'
+import { Code, Globe, Image, Text, Search, Settings, ArrowRight, Sparkles } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 interface AgentCardProps {
   title: string
   description: string
-  icon: 'Text' | 'Code' | 'Image' | 'Globe' | 'Search' | 'Settings' | 'Shield'
+  icon: 'Text' | 'Code' | 'Image' | 'Globe' | 'Search' | 'Settings'
   href: string
   bgColor?: string
 }
@@ -28,7 +28,6 @@ export function AgentCard({
     Globe: Globe,
     Search: Search,
     Settings: Settings,
-    Shield: Shield,
   }[icon]
 
   const gradientColors = {
@@ -37,7 +36,6 @@ export function AgentCard({
     'bg-green-500': 'from-green-500 to-green-600',
     'bg-orange-500': 'from-orange-500 to-orange-600',
     'bg-indigo-500': 'from-indigo-500 to-indigo-600',
-    'bg-red-500': 'from-red-500 to-red-600',
   }[bgColor] || 'from-blue-500 to-blue-600'
 
   const iconColors = {
@@ -46,7 +44,6 @@ export function AgentCard({
     'bg-green-500': 'text-green-500',
     'bg-orange-500': 'text-orange-500',
     'bg-indigo-500': 'text-indigo-500',
-    'bg-red-500': 'text-red-500',
   }[bgColor] || 'text-blue-500'
 
   return (

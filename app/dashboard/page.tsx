@@ -105,7 +105,7 @@ export default async function DashboardPage() {
           </Badge>
         </div>
         
-        <div className={`grid gap-6 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-6' : 'lg:grid-cols-5'}`}>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
           <AgentCard 
             title="Text Generation"
             description="Create compelling content, articles, and copy with advanced AI models"
@@ -141,15 +141,6 @@ export default async function DashboardPage() {
             href="/dashboard/search"
             bgColor="bg-orange-500"
           />
-          {isAdmin && (
-            <AgentCard 
-              title="Admin Panel"
-              description="Manage users, system settings, and monitor platform activity"
-              icon="Shield"
-              href="/admin"
-              bgColor="bg-red-500"
-            />
-          )}
         </div>
       </div>
 

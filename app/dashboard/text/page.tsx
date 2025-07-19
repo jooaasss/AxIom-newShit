@@ -160,7 +160,7 @@ export default function TextPage() {
             <CardContent className="flex-1 flex flex-col space-y-4">
               {/* Область сообщений с фиксированной высотой */}
               <div className="flex-1 min-h-0">
-                <ScrollArea className="h-[400px] border rounded-lg bg-muted/30">
+                <ScrollArea className="h-full border rounded-lg bg-muted/30">
                   <div className="p-3 space-y-2">
                     {messages.length === 0 ? (
                       <div className="flex items-center justify-center h-24 text-muted-foreground text-sm">

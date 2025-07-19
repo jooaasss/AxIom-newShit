@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Loader } from '@/components/loader'
-import { ProviderAvatar } from '@/components/ui/provider-avatar'
 import { apiClient, makeApiRequest } from '@/lib/axios-interceptor'
 import { toast } from 'sonner'
 import { Check, X, Server, User } from 'lucide-react'
@@ -189,11 +188,9 @@ export function ProviderSelector({
               >
                 <CardContent className={`${providers.length > 6 ? 'p-3' : 'p-4'}`}>
                   <div className="flex items-center space-x-3">
-                    <ProviderAvatar 
-                      provider={provider.id} 
-                      size={providers.length > 6 ? 'sm' : 'md'}
-                      className="shrink-0 transition-all duration-300"
-                    />
+                    <div className={`${providers.length > 6 ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-lg'} rounded-lg bg-gradient-to-br ${provider.color} flex items-center justify-center text-white shrink-0 transition-all duration-300`}>
+                      {provider.icon}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <h4 className={`font-medium ${providers.length > 6 ? 'text-sm' : ''}`}>{provider.name}</h4>
                       <p className={`text-muted-foreground ${providers.length > 6 ? 'text-xs' : 'text-sm'}`}>

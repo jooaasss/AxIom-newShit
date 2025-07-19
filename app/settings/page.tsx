@@ -329,7 +329,7 @@ export default function SettingsPage() {
             </Button>
           </CardFooter>
         </Card>
-          </div>
+      </div>
         </TabsContent>
       </Tabs>
     </div>
