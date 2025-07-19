@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
-import { Sparkles, TrendingUp, Clock, Zap } from 'lucide-react'
+import { Sparkles, TrendingUp, Clock, Zap, Shield } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +9,7 @@ import { AgentCard } from '@/components/dashboard/agent-card'
 import { RecentGenerations } from '@/components/dashboard/recent-generations'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { prisma } from '@/lib/prisma'
 
 export default async function DashboardPage() {
   const { userId } = await auth()
@@ -16,6 +17,14 @@ export default async function DashboardPage() {
   if (!userId) {
     redirect('/sign-in')
   }
+
+  // Получаем данные пользователя для проверки прав администратора
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
+    select: { isAdmin: true }
+  })
+
+  const isAdmin = user?.isAdmin || false
 
   return (
     <div className="flex-1 space-y-8 p-6 bg-gradient-to-br from-background via-background to-muted/20">
@@ -96,7 +105,7 @@ export default async function DashboardPage() {
           </Badge>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        <div className={`grid gap-6 md:grid-cols-2 ${isAdmin ? 'lg:grid-cols-6' : 'lg:grid-cols-5'}`}>
           <AgentCard 
             title="Text Generation"
             description="Create compelling content, articles, and copy with advanced AI models"
@@ -132,6 +141,15 @@ export default async function DashboardPage() {
             href="/dashboard/search"
             bgColor="bg-orange-500"
           />
+          {isAdmin && (
+            <AgentCard 
+              title="Admin Panel"
+              description="Manage users, system settings, and monitor platform activity"
+              icon="Shield"
+              href="/admin"
+              bgColor="bg-red-500"
+            />
+          )}
         </div>
       </div>
 

@@ -31,6 +31,7 @@ model User {
   generations Generation[]
   purchases   Purchase[]
   chats       Chat[]
+  apiKeys     UserAPIKey[]
 
   @@map("users")
 }
@@ -117,6 +118,21 @@ model Chat {
   messages ChatMessage[]
 
   @@map("chats")
+}
+
+model UserAPIKey {
+  id        String   @id @default(cuid())
+  userId    String
+  provider  String   // 'openai', 'groq', 'google', 'cohere', 'huggingface', 'grok', 'deepseek'
+  apiKey    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@map("user_api_keys")
 }
 
 model ChatMessage {

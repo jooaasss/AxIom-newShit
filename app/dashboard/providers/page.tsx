@@ -281,13 +281,13 @@ export default function ProvidersPage() {
             <div>
               <h4 className="font-medium mb-2">Provider Links</h4>
               <div className="space-y-2 text-sm">
-                <div>• OpenAI: <a href="https://platform.openai.com/" target="_blank" className="text-blue-500 hover:underline">platform.openai.com</a></div>
-                <div>• Groq: <a href="https://console.groq.com/" target="_blank" className="text-blue-500 hover:underline">console.groq.com</a></div>
-                <div>• Google Gemini: <a href="https://aistudio.google.com/" target="_blank" className="text-blue-500 hover:underline">aistudio.google.com</a></div>
-                <div>• Cohere: <a href="https://dashboard.cohere.com/" target="_blank" className="text-blue-500 hover:underline">dashboard.cohere.com</a></div>
-                <div>• Hugging Face: <a href="https://huggingface.co/" target="_blank" className="text-blue-500 hover:underline">huggingface.co</a></div>
-                <div>• Grok: <a href="https://x.ai/" target="_blank" className="text-blue-500 hover:underline">x.ai</a></div>
-                <div>• DeepSeek: <a href="https://platform.deepseek.com/" target="_blank" className="text-blue-500 hover:underline">platform.deepseek.com</a></div>
+                <div>• OpenAI: <a href="https://platform.openai.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">platform.openai.com</a></div>
+                <div>• Groq: <a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">console.groq.com</a></div>
+                <div>• Google Gemini: <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">aistudio.google.com</a></div>
+                <div>• Cohere: <a href="https://dashboard.cohere.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">dashboard.cohere.com</a></div>
+                <div>• Hugging Face: <a href="https://huggingface.co/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">huggingface.co</a></div>
+                <div>• Grok: <a href="https://x.ai/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">x.ai</a></div>
+                <div>• DeepSeek: <a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline transition-colors">platform.deepseek.com</a></div>
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 const textGenerationSchema = z.object({
   prompt: z.string().min(1).max(10000),
-  provider: z.enum(['openai', 'groq', 'huggingface', 'gemini', 'cohere', 'grok']).optional(),
+  provider: z.enum(['openai', 'groq', 'huggingface', 'gemini', 'cohere', 'grok', 'deepseek']).optional(),
   model: z.string().optional(),
   maxTokens: z.number().min(1).max(4000).optional(),
   temperature: z.number().min(0).max(2).optional(),
