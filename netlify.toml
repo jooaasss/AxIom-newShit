@@ -7,7 +7,6 @@
   NODE_VERSION = "18.20.4"
   NETLIFY_SKIP_SECRETS_SCANNING = "true"
   CI = "true"
-  NODE_ENV = "production"
 
 [[redirects]]
   from = "/*"
