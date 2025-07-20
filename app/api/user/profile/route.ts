@@ -13,6 +13,10 @@ export async function GET() {
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
+    }
+
     // Find user by clerkId first
     let dbUser = await prisma.user.findUnique({
       where: {

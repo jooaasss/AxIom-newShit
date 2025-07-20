@@ -11,6 +11,10 @@ export async function GET() {
       return adminApiResponse(error || 'Admin access required')
     }
 
+    if (!prisma) {
+      return adminApiResponse('Database connection not available', 500)
+    }
+
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -66,6 +70,10 @@ export async function PATCH(req: Request) {
       if (allowedUpdates.includes(key)) {
         filteredUpdates[key] = value
       }
+    }
+
+    if (!prisma) {
+      return adminApiResponse('Database connection not available', 500)
     }
 
     const updatedUser = await prisma.user.update({

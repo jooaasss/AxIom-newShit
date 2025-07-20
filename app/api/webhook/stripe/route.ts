@@ -26,6 +26,10 @@ export async function POST(req: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session
 
+  if (!prisma) {
+    return new NextResponse('Database connection not available', { status: 500 })
+  }
+
   // Handle successful checkout sessions
   if (event.type === 'checkout.session.completed') {
     const subscription = await stripe.subscriptions.retrieve(

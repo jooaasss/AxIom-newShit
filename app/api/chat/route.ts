@@ -82,6 +82,13 @@ export async function POST(req: NextRequest) {
       { role: 'user' as const, content: message }
     ]
 
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
+      )
+    }
+
     // Create or update chat in database
     let chat
     if (chatId) {

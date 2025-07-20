@@ -13,8 +13,12 @@ export async function POST() {
     }
 
     // Check if the user is dw_940
-    if (user.emailAddresses[0]?.emailAddress !== 'kalitestakk@gmail.com') {
+    if (user.emailAddresses[0]?.emailAddress !== process.env.ADMIN_EMAIL) {
       return new NextResponse('Only dw_940 can setup admin access', { status: 403 })
+    }
+
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
     }
 
     // Find or create the user in database

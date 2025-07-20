@@ -29,6 +29,13 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
+      )
+    }
+
     const { searchParams } = new URL(req.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
@@ -118,6 +125,13 @@ export async function POST(req: NextRequest) {
     
     const { name, provider, model, systemPrompt } = validatedData
 
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
+      )
+    }
+
     const chat = await prisma.chat.create({
       data: {
         userId,
@@ -185,6 +199,13 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json()
     const validatedData = updateChatSchema.parse(body)
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
+      )
+    }
 
     // Check if chat exists and belongs to user
     const existingChat = await prisma.chat.findFirst({
@@ -263,6 +284,13 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json(
         { error: 'Chat ID is required' },
         { status: 400 }
+      )
+    }
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
       )
     }
 

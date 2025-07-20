@@ -145,12 +145,12 @@ export default function FeaturesPage() {
               <CardHeader className="text-center">
                 <CardTitle>Free</CardTitle>
                 <div className="text-3xl font-bold">$0</div>
-                <CardDescription>Perfect for trying out our platform</CardDescription>
+                <CardDescription>Get started with basic features</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">10 credits</span>
+                  <span className="text-sm">10 free generations</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
@@ -158,19 +158,23 @@ export default function FeaturesPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Standard support</span>
+                  <span className="text-sm">Basic code generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Generation history</span>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="border-2 border-purple-500 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-purple-500">Most Popular</Badge>
+                <Badge className="bg-purple-500">Popular</Badge>
               </div>
               <CardHeader className="text-center">
                 <CardTitle>Pro</CardTitle>
-                <div className="text-3xl font-bold">$29</div>
-                <CardDescription>For professionals and teams</CardDescription>
+                <div className="text-3xl font-bold">$20</div>
+                <CardDescription>Unlimited generations for power users</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -179,41 +183,53 @@ export default function FeaturesPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">All AI models</span>
+                  <span className="text-sm">Advanced text generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Advanced code generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Image generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Website generation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
                   <span className="text-sm">Priority support</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Team collaboration</span>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="border-2">
               <CardHeader className="text-center">
-                <CardTitle>Enterprise</CardTitle>
-                <div className="text-3xl font-bold">Custom</div>
-                <CardDescription>For large organizations</CardDescription>
+                <CardTitle>Pay As You Go</CardTitle>
+                <div className="text-3xl font-bold">$7</div>
+                <CardDescription>Buy credits for occasional use</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Custom integrations</span>
+                  <span className="text-sm">Text: 1 credit per generation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Dedicated support</span>
+                  <span className="text-sm">Code: 2 credits per generation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">SLA guarantees</span>
+                  <span className="text-sm">AI Search: 3 credits per generation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Advanced security</span>
+                  <span className="text-sm">Image: 5 credits per generation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Bulk discounts available</span>
                 </div>
               </CardContent>
             </Card>

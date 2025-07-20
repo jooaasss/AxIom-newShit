@@ -243,17 +243,17 @@ export default function DocumentationPage() {
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">Free Plan</div>
                 <div className="text-2xl font-bold text-green-600 mb-2">10 Credits</div>
-                <p className="text-sm text-muted-foreground">Perfect for trying out the platform</p>
+                <p className="text-sm text-muted-foreground">Get started with basic features</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">Pro Plan</div>
                 <div className="text-2xl font-bold text-blue-600 mb-2">$20/month</div>
-                <p className="text-sm text-muted-foreground">Unlimited generations for professionals</p>
+                <p className="text-sm text-muted-foreground">Unlimited generations for power users</p>
               </div>
               <div className="p-4 border rounded-lg">
-                <div className="font-semibold mb-2">Enterprise</div>
-                <div className="text-2xl font-bold text-purple-600 mb-2">Custom</div>
-                <p className="text-sm text-muted-foreground">Tailored solutions for teams</p>
+                <div className="font-semibold mb-2">Pay As You Go</div>
+                <div className="text-2xl font-bold text-purple-600 mb-2">$7</div>
+                <p className="text-sm text-muted-foreground">Buy credits for occasional use</p>
               </div>
             </div>
             <Button asChild>

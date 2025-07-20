@@ -11,6 +11,10 @@ export async function GET() {
       return adminApiResponse(error || 'Admin access required')
     }
 
+    if (!prisma) {
+      return adminApiResponse('Database connection not available', 500)
+    }
+
     const providers = await prisma.aIProviderKey.findMany({
       select: {
         id: true,
@@ -62,6 +66,10 @@ export async function POST(req: Request) {
       return adminApiResponse('Invalid provider', 400)
     }
 
+    if (!prisma) {
+      return adminApiResponse('Database connection not available', 500)
+    }
+
     const providerKey = await prisma.aIProviderKey.upsert({
       where: { provider },
       update: {
@@ -105,6 +113,10 @@ export async function DELETE(req: Request) {
 
     if (!providerId) {
       return adminApiResponse('Provider ID is required', 400)
+    }
+
+    if (!prisma) {
+      return adminApiResponse('Database connection not available', 500)
     }
 
     await prisma.aIProviderKey.delete({

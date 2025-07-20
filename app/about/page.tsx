@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Target, Users, Lightbulb, Award, Heart, Globe } from "lucide-react"
 import Link from "next/link"
+import { Zap } from "lucide-react"
+
 
 export default function AboutPage() {
   const values = [
@@ -30,51 +32,56 @@ export default function AboutPage() {
 
   const team = [
     {
-      name: "Alex Chen",
-      role: "CEO & Co-Founder",
-      bio: "Former AI researcher at Google with 10+ years in machine learning and product development."
+      name: "Daniel Nik",
+      role: "Computer Science Student",
+      bio: "Passionate about AI and machine learning, currently pursuing a degree in Computer Science with a focus on developing innovative solutions for real-world problems."
     },
     {
-      name: "Sarah Johnson",
-      role: "CTO & Co-Founder",
-      bio: "Ex-OpenAI engineer specializing in large language models and AI infrastructure."
-    },
-    {
-      name: "Marcus Rodriguez",
-      role: "Head of Product",
-      bio: "Product leader with experience at Meta and Stripe, focused on user experience and growth."
-    },
-    {
-      name: "Dr. Emily Watson",
-      role: "Head of AI Research",
-      bio: "PhD in Computer Science from Stanford, published researcher in AI safety and alignment."
+      name: "Evgeniy Joas",
+      role: "Software Engineering Student",
+      bio: "Dedicated software engineering student with experience in full-stack development and a keen interest in creating user-friendly applications that make technology accessible to everyone."
     }
   ]
 
   const milestones = [
     {
-      year: "2023",
+      step: "1",
       title: "Company Founded",
       description: "AxIom was founded with the vision of making AI creation tools accessible to everyone."
     },
     {
-      year: "2024",
+      step: "2",
       title: "Beta Launch",
       description: "Launched our beta platform with text and code generation capabilities to 1,000+ users."
     },
     {
-      year: "2024",
+      step: "3",
       title: "Series A Funding",
-      description: "Raised $15M Series A to expand our AI capabilities and grow our team."
+      description: "Raised $15k Series A to expand our AI capabilities and grow our team."
     },
     {
-      year: "2025",
+      step: "4",
       title: "Full Platform Launch",
       description: "Launched complete platform with text, code, image, and website generation tools."
     }
   ]
 
   return (
+     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Navigation Header */}
+      <nav className="border-b bg-white/80 backdrop-blur-sm dark:bg-slate-900/80">
+        <div className="container mx-auto px-4 py-4">
+          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+              <Zap className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              AxIom
+            </span>
+          </Link>
+        </div>
+      </nav>
+
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
@@ -132,7 +139,7 @@ export default function AboutPage() {
               <div key={index} className="flex gap-6 mb-8 last:mb-0">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold">
-                    {milestone.year.slice(-2)}
+                    {milestone.step.slice(-2)}
                   </div>
                 </div>
                 <div className="flex-grow">
@@ -144,10 +151,12 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Team */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Team */}
+      <div className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
+        {/* Flex container to center the grid */}
+        <div className="flex justify-center">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
             {team.map((member, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                 <CardHeader>
@@ -166,25 +175,26 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-
+      </div>
+      
         {/* Stats */}
         <div className="mb-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white">
           <h2 className="text-3xl font-bold text-center mb-12">AxIom by the Numbers</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold mb-2">50K+</div>
+              <div className="text-4xl font-bold mb-2">1.5K+</div>
               <div className="text-lg opacity-90">Active Users</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">2M+</div>
+              <div className="text-4xl font-bold mb-2">10.000+</div>
               <div className="text-lg opacity-90">Generations Created</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">99.9%</div>
+              <div className="text-4xl font-bold mb-2">99.7%</div>
               <div className="text-lg opacity-90">Uptime</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">150+</div>
+              <div className="text-4xl font-bold mb-2">23+</div>
               <div className="text-lg opacity-90">Countries Served</div>
             </div>
           </div>
@@ -207,5 +217,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
+  </div>
   )
 }

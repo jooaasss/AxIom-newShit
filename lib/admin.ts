@@ -11,6 +11,10 @@ export async function checkAdminAccess() {
       return { isAdmin: false, error: 'Unauthorized' }
     }
 
+    if (!prisma) {
+      return { isAdmin: false, error: 'Database connection not available' }
+    }
+
     // Check if user is dw_940 or has admin privileges
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: userId },
@@ -21,7 +25,7 @@ export async function checkAdminAccess() {
     }
 
     // Check if user is dw_940 or has admin role
-    const isAdmin = dbUser.email === 'kalitestakk@gmail.com' || dbUser.isAdmin
+    const isAdmin = dbUser.email === process.env.ADMIN_EMAIL || dbUser.isAdmin
 
     return { isAdmin, user: dbUser, error: null }
   } catch (error) {

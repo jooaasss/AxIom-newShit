@@ -37,7 +37,7 @@ export function MainNav({ className }: MainNavProps) {
   ]
 
   // Add admin route for dw_940 user
-  if (user?.emailAddresses?.[0]?.emailAddress === 'kalitestakk@gmail.com') {
+  if (user?.emailAddresses?.[0]?.emailAddress === process.env.ADMIN_EMAIL) {
     routes.push({
       href: '/admin',
       label: 'Admin',

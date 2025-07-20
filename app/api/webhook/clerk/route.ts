@@ -7,6 +7,10 @@ export async function POST(req: Request) {
     const payload: WebhookEvent = await req.json()
     const { type, data } = payload
 
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
+    }
+
     // Handle user creation
     if (type === 'user.created') {
       const { id, email_addresses } = data

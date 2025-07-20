@@ -21,36 +21,11 @@ export default function ContactPage() {
       response: "Instant response"
     },
     {
-      icon: Phone,
-      title: "Phone Support",
-      description: "Speak directly with our enterprise support team",
-      contact: "+1 (555) 123-4567",
-      response: "Business hours only"
-    },
-    {
       icon: HelpCircle,
-      title: "Help Center",
+      title: "Documentation",
       description: "Browse our comprehensive knowledge base",
-      contact: "help.AxIom.com",
+      contact: "docs",
       response: "24/7 availability"
-    }
-  ]
-
-  const offices = [
-    {
-      city: "San Francisco",
-      address: "123 Innovation Drive\nSan Francisco, CA 94105\nUnited States",
-      type: "Headquarters"
-    },
-    {
-      city: "London",
-      address: "45 Tech Square\nLondon EC2A 4DN\nUnited Kingdom",
-      type: "European Office"
-    },
-    {
-      city: "Singapore",
-      address: "88 Marina Bay\nSingapore 018956\nSingapore",
-      type: "Asia Pacific Office"
     }
   ]
 
@@ -58,26 +33,8 @@ export default function ContactPage() {
     {
       icon: Users,
       title: "General Support",
-      description: "Account questions, billing inquiries, and general help",
+      description: "Account questions, billing inquiries, technical help, and general assistance",
       email: "support@AxIom.com"
-    },
-    {
-      icon: Zap,
-      title: "Technical Support",
-      description: "API issues, integration help, and technical troubleshooting",
-      email: "tech@AxIom.com"
-    },
-    {
-      icon: Users,
-      title: "Enterprise Sales",
-      description: "Custom solutions, enterprise pricing, and partnerships",
-      email: "sales@AxIom.com"
-    },
-    {
-      icon: MessageSquare,
-      title: "Media Inquiries",
-      description: "Press releases, interviews, and media partnerships",
-      email: "press@AxIom.com"
     }
   ]
 
@@ -109,7 +66,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Methods */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {contactMethods.map((method, index) => {
             const Icon = method.icon
             return (
@@ -125,8 +82,16 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="font-semibold text-sm">{method.contact}</div>
-                    <Badge variant="secondary" className="text-xs">{method.response}</Badge>
+                    {method.contact === "docs" ? (
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link href="/docs">View Documentation</Link>
+                      </Button>
+                    ) : (
+                      <>
+                        <div className="font-semibold text-sm">{method.contact}</div>
+                        <Badge variant="secondary" className="text-xs">{method.response}</Badge>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -134,60 +99,27 @@ export default function ContactPage() {
           })}
         </div>
 
-        {/* Support Types */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Get the Right Help</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {supportTypes.map((type, index) => {
-              const Icon = type.icon
-              return (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                        <Icon className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">{type.title}</CardTitle>
-                        <CardDescription className="text-sm">
-                          {type.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link href={`mailto:${type.email}`}>{type.email}</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
+        {/* General Support */}
+        <Card className="mb-16">
+          <CardHeader className="text-center">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 mx-auto mb-4 flex items-center justify-center">
+              <Users className="h-6 w-6 text-white" />
+            </div>
+            <CardTitle className="text-2xl">General Support</CardTitle>
+            <CardDescription>
+              Account questions, billing inquiries, technical help, and general assistance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <Button variant="outline" className="mb-2" asChild>
+                <Link href="mailto:support@AxIom.com">support@AxIom.com</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Office Locations */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Offices</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {offices.map((office, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 mx-auto mb-4 flex items-center justify-center">
-                    <MapPin className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-xl">{office.city}</CardTitle>
-                  <Badge variant="secondary">{office.type}</Badge>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="whitespace-pre-line text-sm">
-                    {office.address}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+        
 
         {/* Business Hours */}
         <Card className="mb-16">
@@ -201,21 +133,11 @@ export default function ContactPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div>
-                <h3 className="font-semibold mb-2">Americas</h3>
-                <p className="text-sm text-muted-foreground">Monday - Friday</p>
-                <p className="text-sm text-muted-foreground">9:00 AM - 6:00 PM PST</p>
-              </div>
+            <div className="text-center">
               <div>
                 <h3 className="font-semibold mb-2">Europe</h3>
                 <p className="text-sm text-muted-foreground">Monday - Friday</p>
                 <p className="text-sm text-muted-foreground">9:00 AM - 6:00 PM GMT</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Asia Pacific</h3>
-                <p className="text-sm text-muted-foreground">Monday - Friday</p>
-                <p className="text-sm text-muted-foreground">9:00 AM - 6:00 PM SGT</p>
               </div>
             </div>
           </CardContent>
@@ -231,7 +153,7 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Simply sign up for a free account and you'll receive 10 credits to try our platform. No credit card required!
+                  Simply sign up for a free account and you'll receive 10 free generations to try our platform. No credit card required!
                 </CardDescription>
               </CardContent>
             </Card>

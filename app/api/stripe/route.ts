@@ -21,6 +21,10 @@ export async function GET() {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
+    }
+
     // Get user from database
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: userId },

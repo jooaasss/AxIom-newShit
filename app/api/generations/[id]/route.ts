@@ -16,6 +16,10 @@ export async function GET(
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
+    }
+
     const generation = await prisma.generation.findUnique({
       where: {
         id: params.id,

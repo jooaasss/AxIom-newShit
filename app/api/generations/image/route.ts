@@ -18,6 +18,10 @@ export async function POST(req: Request) {
       return new NextResponse("Prompt is required", { status: 400 })
     }
 
+    if (!prisma) {
+      return new NextResponse('Database connection not available', { status: 500 })
+    }
+
     // Get user from database or create if doesn't exist
     let dbUser = await prisma.user.findUnique({
       where: { clerkId: userId },

@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "sonner"
 import { PHProvider } from "@/components/providers/posthog-provider"
 import { AdminStatusProvider } from "@/components/admin-status-provider"
+import { CookieConsentBanner } from "@/components/cookie-consent-manager"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -67,6 +68,7 @@ export default function RootLayout({
               <AdminStatusProvider>
                 {children}
                 <Toaster richColors position="top-right" />
+                <CookieConsentBanner />
               </AdminStatusProvider>
             </ThemeProvider>
           </PHProvider>

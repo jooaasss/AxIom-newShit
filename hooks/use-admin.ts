@@ -27,7 +27,7 @@ export function useAdmin(): AdminStatus {
     const checkAdminStatus = async () => {
       try {
         // Проверяем по email администратора
-        const isAdminByEmail = user.primaryEmailAddress?.emailAddress === 'kalitestakk@gmail.com'
+        const isAdminByEmail = user.primaryEmailAddress?.emailAddress === process.env.NEXT_PUBLIC_ADMIN_EMAIL
         
         if (isAdminByEmail) {
           setAdminStatus({ isAdmin: true, loading: false, error: null })

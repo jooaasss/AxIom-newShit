@@ -82,6 +82,9 @@ export async function GET(req: NextRequest) {
       // Check service API keys (environment variables)
       providersToCheck = getAvailableProviders()
     } else {
+      if (!prisma) {
+        return NextResponse.json({ error: 'Database connection not available' }, { status: 500 })
+      }
       // Check user API keys from database
       const userKeys = await prisma.userAPIKey.findMany({
         where: { userId },
