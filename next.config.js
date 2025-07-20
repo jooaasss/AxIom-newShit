@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
+  output: 'standalone',
   experimental: {
     serverComponentsExternalPackages: ["prisma"]
   },
-  distDir: 'out',
+  trailingSlash: false,
+  distDir: '.next',
   generateBuildId: async () => {
     return 'build-' + Date.now()
   },
   poweredByHeader: false,
+  generateStaticParams: false,
   images: {
-    unoptimized: true,
     domains: ['oaidalleapiprodscus.blob.core.windows.net'],
     remotePatterns: [
       {
@@ -46,6 +46,15 @@ const nextConfig = {
         ],
       },
     ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/:path*',
+        destination: 'https://app.posthog.com/:path*',
+      },
+    ];
+  },
   },
 };
 
