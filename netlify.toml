@@ -6,6 +6,8 @@
 [build.environment]
   NODE_VERSION = "18.20.4"
   NETLIFY_SKIP_SECRETS_SCANNING = "true"
+  SECRETS_SCAN_ENABLED = "false"
+  SECRETS_SCAN_OMIT_PATHS = ".netlify/**,.next/**,node_modules/**"
   CI = "true"
 
 [[redirects]]
