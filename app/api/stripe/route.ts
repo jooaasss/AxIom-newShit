@@ -170,15 +170,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: session.url })
   } catch (error) {
     console.error('Stripe error details:', {
-      message: error.message,
-      type: error.type,
-      code: error.code,
-      statusCode: error.statusCode,
-      requestId: error.requestId,
-      stack: error.stack
+      message: error instanceof Error ? error.message : 'Unknown error',
+      type: (error as any)?.type,
+      code: (error as any)?.code,
+      statusCode: (error as any)?.statusCode,
+      requestId: (error as any)?.requestId,
+      stack: error instanceof Error ? error.stack : undefined
     })
     return NextResponse.json(
-      { error: 'Failed to create checkout session: ' + error.message },
+      { error: 'Failed to create checkout session: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     )
   }

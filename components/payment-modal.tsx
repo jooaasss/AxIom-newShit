@@ -33,6 +33,21 @@ interface PaymentModalProps {
 }
 
 const plans = {
+  free: {
+    name: 'Free Plan',
+    price: '$0',
+    period: 'forever',
+    description: 'Get started with basic features',
+    features: [
+      '10 text generations per month',
+      '5 code generations per month',
+      '3 image generations per month',
+      '1 website generation per month',
+      'Community support',
+      'Basic AI models',
+    ],
+    popular: false,
+  },
   pro: {
     name: 'Pro Subscription',
     price: '$20',
