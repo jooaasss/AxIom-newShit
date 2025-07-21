@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import axios from 'axios'
 
 export const dynamic = 'force-dynamic'
 import { Button } from '@/components/ui/button'
@@ -9,8 +10,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader } from '@/components/loader'
 import { useToast } from '@/components/ui/use-toast'
 import { apiClient, makeApiRequest } from '@/lib/axios-interceptor'
-import { Check } from 'lucide-react'
+import { Check, Crown } from 'lucide-react'
 import { PaymentModal } from '@/components/payment-modal'
+import { Badge } from '@/components/ui/badge'
+
+interface UserProfile {
+  credits: number
+  isPro: boolean
+  hasUnlimitedCredits: boolean
+  isAdmin: boolean
+  stripeSubscriptionId: string | null
+  stripeCurrentPeriodEnd: string | null
+}
 
 export default function PricingPage() {
   const router = useRouter()
@@ -18,6 +29,23 @@ export default function PricingPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<'pro' | 'credits' | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [profileLoading, setProfileLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('/api/user/profile')
+        setUserProfile(response.data)
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error)
+      } finally {
+        setProfileLoading(false)
+      }
+    }
+
+    fetchUserProfile()
+  }, [])
 
   const handlePlanSelection = (plan: 'pro' | 'credits') => {
     setSelectedPlan(plan)
@@ -27,6 +55,18 @@ export default function PricingPage() {
   const closePaymentModal = () => {
     setIsPaymentModalOpen(false)
     setSelectedPlan(null)
+  }
+
+  const isProUser = userProfile?.isPro || userProfile?.hasUnlimitedCredits || userProfile?.isAdmin
+
+  if (profileLoading) {
+    return (
+      <div className="container mx-auto py-10">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -79,12 +119,22 @@ export default function PricingPage() {
           </CardFooter>
         </Card>
 
-        <Card className="flex flex-col border-primary">
+        <Card className={`flex flex-col ${isProUser ? 'border-green-500' : 'border-primary'}`}>
           <CardHeader>
-            <div className="rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground w-fit mb-2">
-              Popular
-            </div>
-            <CardTitle>Pro</CardTitle>
+            {isProUser ? (
+              <Badge className="bg-green-500 text-white px-3 py-1 text-xs w-fit mb-2">
+                <Crown className="h-3 w-3 mr-1" />
+                Active
+              </Badge>
+            ) : (
+              <div className="rounded-full bg-primary px-3 py-1 text-xs text-primary-foreground w-fit mb-2">
+                Popular
+              </div>
+            )}
+            <CardTitle className="flex items-center">
+              Pro
+              {isProUser && <Crown className="h-5 w-5 ml-2 text-yellow-500" />}
+            </CardTitle>
             <CardDescription>
               Unlimited generations for power users
             </CardDescription>
@@ -122,10 +172,18 @@ export default function PricingPage() {
           <CardFooter>
             <Button 
               onClick={() => handlePlanSelection('pro')} 
-              disabled={isLoading}
+              disabled={isLoading || isProUser}
               className="w-full"
+              variant={isProUser ? 'secondary' : 'default'}
             >
-              Subscribe
+              {isProUser ? (
+                <span className="flex items-center">
+                  <Crown className="h-4 w-4 mr-2" />
+                  Subscription Active
+                </span>
+              ) : (
+                'Subscribe'
+              )}
             </Button>
           </CardFooter>
         </Card>
@@ -136,7 +194,7 @@ export default function PricingPage() {
             <CardDescription>
               Buy credits for occasional use
             </CardDescription>
-            <div className="mt-4 text-4xl font-bold">$7</div>
+            <div className="mt-4 text-4xl font-bold">$10</div>
             <p className="text-sm text-muted-foreground">for 100 credits</p>
           </CardHeader>
           <CardContent className="flex-1">
@@ -177,10 +235,11 @@ export default function PricingPage() {
       </div>
 
       <PaymentModal 
-        isOpen={isPaymentModalOpen}
-        onClose={closePaymentModal}
-        selectedPlan={selectedPlan}
-      />
+          isOpen={isPaymentModalOpen}
+          onClose={closePaymentModal}
+          selectedPlan={selectedPlan}
+          isProUser={isProUser}
+        />
     </div>
   )
 }

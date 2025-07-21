@@ -3,7 +3,7 @@ import { handleErrorWithToast } from './error-handler'
 
 // Создаем экземпляр axios с базовой конфигурацией
 export const apiClient = axios.create({
-  timeout: 30000, // 30 секунд
+  timeout: 60000, // 60 секунд
   headers: {
     'Content-Type': 'application/json',
   },

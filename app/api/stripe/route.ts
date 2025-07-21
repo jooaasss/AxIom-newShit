@@ -7,10 +7,12 @@ import { absoluteUrl } from '@/lib/utils'
 export const dynamic = 'force-dynamic'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build', {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2024-06-20',
 })
 
 const settingsUrl = absoluteUrl('/settings')
+const successUrl = absoluteUrl('/payment/success')
+const cancelUrl = absoluteUrl('/payment/cancel')
 
 export async function GET() {
   try {
@@ -42,8 +44,8 @@ export async function GET() {
 
     // Otherwise, create a checkout session for a new subscription
     const session = await stripe.checkout.sessions.create({
-      success_url: settingsUrl,
-      cancel_url: settingsUrl,
+      success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl,
       payment_method_types: ['card'],
       mode: 'subscription',
       billing_address_collection: 'auto',

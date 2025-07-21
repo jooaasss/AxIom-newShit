@@ -7,6 +7,9 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Copy, Check } from 'lucide-react'
 import { toast } from 'sonner'
+import ReactMarkdown from 'react-markdown'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface TextContainerProps {
   title?: string
@@ -79,8 +82,34 @@ export function TextContainer({
       )}
       
       <CardContent>
-        <div className="whitespace-pre-wrap text-sm leading-relaxed p-4 bg-muted/30 rounded-md border-muted/50 border min-h-[100px]">
-          {displayedContent}
+        <div className="text-sm leading-relaxed p-4 bg-muted/30 rounded-md border-muted/50 border min-h-[100px] prose prose-sm max-w-none dark:prose-invert">
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }: any) {
+                const match = /language-(\w+)/.exec(className || '')
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={oneDark}
+                    language={match[1]}
+                    PreTag="div"
+                    className="rounded-md"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
+                    {children}
+                  </code>
+                )
+              },
+              pre({ children }: any) {
+                return <div className="overflow-x-auto">{children}</div>
+              }
+            }}
+          >
+            {displayedContent}
+          </ReactMarkdown>
         </div>
       </CardContent>
     </Card>

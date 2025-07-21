@@ -21,6 +21,7 @@ interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
   selectedPlan?: 'pro' | 'credits' | null
+  isProUser?: boolean
 }
 
 const plans = {
@@ -57,56 +58,97 @@ const plans = {
 }
 
 const creditPackages = [
-  { amount: 100, price: 7, popular: false },
-  { amount: 500, price: 15, popular: true },
-  { amount: 1000, price: 40, popular: false },
+  { amount: 100, price: 10, popular: false },
+  { amount: 500, price: 40, popular: true },
+  { amount: 1000, price: 70, popular: false },
 ]
 
-export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false }: PaymentModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedCreditPackage, setSelectedCreditPackage] = useState<number | null>(null)
   const { toast } = useToast()
 
   const handleSubscription = async () => {
     setIsLoading(true)
-    const result = await makeApiRequest(
-      () => apiClient.get('/api/stripe'),
-      {
-        context: 'Getting subscription URL',
-        customErrorMessage: 'Failed to get subscription link. Please try again.',
+    try {
+      const result = await makeApiRequest(
+        () => apiClient.get('/api/stripe'),
+        {
+          context: 'Getting subscription URL',
+          customErrorMessage: 'Failed to get subscription link. Please try again.',
+        }
+      )
+      
+      if (result) {
+        window.location.href = result.data.url
       }
-    )
-    
-    if (result) {
-      window.location.href = result.data.url
+    } catch (error) {
+      console.error('Subscription error:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to start subscription process. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   const handleBuyCredits = async (amount: number) => {
     setIsLoading(true)
-    const result = await makeApiRequest(
-      () => apiClient.post('/api/stripe/credits', { amount }),
-      {
-        context: 'Purchasing credits',
-        customErrorMessage: 'Failed to purchase credits. Please try again.',
+    try {
+      const result = await makeApiRequest(
+        () => apiClient.post('/api/stripe/credits', { amount }),
+        {
+          context: 'Purchasing credits',
+          customErrorMessage: 'Failed to purchase credits. Please try again.',
+        }
+      )
+      
+      if (result) {
+        window.location.href = result.data.url
       }
-    )
-    
-    if (result) {
-      window.location.href = result.data.url
+    } catch (error) {
+      console.error('Credits purchase error:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to start credit purchase. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   const renderPlanDetails = () => {
     if (!selectedPlan || !plans[selectedPlan]) return null
 
+    // If user is Pro and trying to access Pro plan, show message about existing subscription
+    if (isProUser && selectedPlan === 'pro') {
+      return (
+        <Card className="mb-6 transition-all duration-200 border-2 border-green-500 bg-green-50 dark:bg-green-950/20">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-center">
+              <div className="text-center">
+                <CardTitle className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
+                   <Check className="h-5 w-5" />
+                   You already have a Pro subscription!
+                 </CardTitle>
+                 <CardDescription className="mt-2">
+                   You can purchase additional credits for extra features
+                 </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+      )
+    }
+
     const plan = plans[selectedPlan]
 
     return (
-      <Card className="mb-6">
-        <CardHeader>
+      <Card className="mb-6 transition-all duration-200 hover:shadow-lg border-2">
+        <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
@@ -148,10 +190,10 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
         {creditPackages.map((pkg) => (
           <Card 
             key={pkg.amount}
-            className={`cursor-pointer transition-colors ${
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
               selectedCreditPackage === pkg.amount 
-                ? 'border-primary bg-primary/5' 
-                : 'hover:border-primary/50'
+                ? 'border-primary bg-primary/10 shadow-md ring-2 ring-primary/20' 
+                : 'hover:border-primary/50 hover:bg-primary/5'
             }`}
             onClick={() => setSelectedCreditPackage(pkg.amount)}
           >
@@ -186,6 +228,14 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
 
   const handlePayment = () => {
     if (selectedPlan === 'pro') {
+      if (isProUser) {
+        toast({
+          title: 'Subscription Already Active',
+          description: 'You already have an active Pro subscription. You can purchase additional credits.',
+          variant: 'default',
+        })
+        return
+      }
       handleSubscription()
     } else if (selectedPlan === 'credits' && selectedCreditPackage) {
       handleBuyCredits(selectedCreditPackage)
@@ -201,7 +251,10 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
 
   const getButtonText = () => {
     if (isLoading) return 'Processing...'
-    if (selectedPlan === 'pro') return 'Subscribe Now'
+    if (selectedPlan === 'pro') {
+      if (isProUser) return 'Subscription Active'
+      return 'Subscribe Now'
+    }
     if (selectedPlan === 'credits') {
       if (!selectedCreditPackage) return 'Select Package'
       return `Buy ${selectedCreditPackage} Credits`
@@ -211,14 +264,14 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="text-center space-y-3">
+          <DialogTitle className="flex items-center justify-center gap-2 text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <CreditCard className="h-6 w-6 text-primary" />
             Complete Your Purchase
           </DialogTitle>
-          <DialogDescription>
-            You're about to upgrade your account. Review your selection below.
+          <DialogDescription className="text-base text-muted-foreground">
+            🚀 You're about to upgrade your account. Review your selection below.
           </DialogDescription>
         </DialogHeader>
 
@@ -226,14 +279,18 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
           {renderPlanDetails()}
           {renderCreditPackages()}
 
-          <div className="rounded-lg bg-muted/50 p-4">
-            <div className="flex items-center gap-2 text-sm">
-              <Check className="h-4 w-4 text-green-500" />
-              <span>Secure payment with Stripe</span>
+          <div className="rounded-lg bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 p-4 border border-green-200/50 dark:border-green-800/50">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+              </div>
+              <span>🔒 Secure payment with Stripe</span>
             </div>
-            <div className="flex items-center gap-2 text-sm mt-1">
-              <Check className="h-4 w-4 text-green-500" />
-              <span>Cancel anytime (for subscriptions)</span>
+            <div className="flex items-center gap-2 text-sm mt-2 font-medium">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
+                <Check className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+              </div>
+              <span>✨ Cancel anytime (for subscriptions)</span>
             </div>
           </div>
         </div>
@@ -245,9 +302,12 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
           <Button 
             onClick={handlePayment}
             disabled={isPaymentDisabled()}
-            className="flex-1"
+            className="flex-1 transition-all duration-200 hover:scale-105"
+            size="lg"
           >
-            {isLoading && <Loader className="mr-2 h-4 w-4" />}
+            {isLoading && (
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            )}
             {getButtonText()}
           </Button>
         </DialogFooter>

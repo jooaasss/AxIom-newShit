@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
@@ -21,12 +21,32 @@ const updateChatSchema = z.object({
 export async function GET(req: NextRequest) {
   try {
     const { userId } = await auth()
+    const user = await currentUser()
     
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
+    }
+
+    // Ensure user exists in database
+    let dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId }
+    })
+
+    if (!dbUser) {
+      // Create user if doesn't exist
+      dbUser = await prisma.user.create({
+        data: {
+          clerkId: userId,
+          email: user.emailAddresses[0].emailAddress,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          imageUrl: user.imageUrl,
+          credits: 10
+        }
+      })
     }
 
     const { searchParams } = new URL(req.url)
@@ -37,7 +57,7 @@ export async function GET(req: NextRequest) {
     const [chats, total] = await Promise.all([
       prisma.chat.findMany({
         where: {
-          userId
+          userId: dbUser.id
         },
         include: {
           messages: {
@@ -60,7 +80,7 @@ export async function GET(req: NextRequest) {
       }),
       prisma.chat.count({
         where: {
-          userId
+          userId: dbUser.id
         }
       })
     ])
@@ -105,12 +125,32 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth()
+    const user = await currentUser()
     
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
+    }
+
+    // Ensure user exists in database
+    let dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId }
+    })
+
+    if (!dbUser) {
+      // Create user if doesn't exist
+      dbUser = await prisma.user.create({
+        data: {
+          clerkId: userId,
+          email: user.emailAddresses[0].emailAddress,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          imageUrl: user.imageUrl,
+          credits: 10
+        }
+      })
     }
 
     const body = await req.json()
@@ -120,7 +160,7 @@ export async function POST(req: NextRequest) {
 
     const chat = await prisma.chat.create({
       data: {
-        userId,
+        userId: dbUser.id,
         name,
         provider,
         model,
@@ -165,11 +205,24 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const { userId } = await auth()
+    const user = await currentUser()
     
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // Ensure user exists in database
+    let dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId }
+    })
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
       )
     }
 
@@ -190,7 +243,7 @@ export async function PUT(req: NextRequest) {
     const existingChat = await prisma.chat.findFirst({
       where: {
         id: chatId,
-        userId
+        userId: dbUser.id
       }
     })
 
@@ -248,11 +301,24 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { userId } = await auth()
+    const user = await currentUser()
     
-    if (!userId) {
+    if (!userId || !user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // Ensure user exists in database
+    let dbUser = await prisma.user.findUnique({
+      where: { clerkId: userId }
+    })
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
       )
     }
 
@@ -270,7 +336,7 @@ export async function DELETE(req: NextRequest) {
     const existingChat = await prisma.chat.findFirst({
       where: {
         id: chatId,
-        userId
+        userId: dbUser.id
       }
     })
 

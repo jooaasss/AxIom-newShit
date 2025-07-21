@@ -5,6 +5,7 @@ import { Sparkles, TrendingUp, Clock, Zap, Shield } from 'lucide-react'
 export const dynamic = 'force-dynamic'
 
 import { CreditsDisplay } from '@/components/dashboard/credits'
+import { SubscriptionStatus } from '@/components/dashboard/subscription-status'
 import { AgentCard } from '@/components/dashboard/agent-card'
 import { RecentGenerations } from '@/components/dashboard/recent-generations'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -39,10 +40,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <Badge variant="outline" className="px-3 py-1">
-            <Sparkles className="h-4 w-4 mr-2" />
-            Pro User
-          </Badge>
+          <SubscriptionStatus />
           <CreditsDisplay />
         </div>
       </div>

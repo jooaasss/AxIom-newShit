@@ -6,6 +6,7 @@ import { trackGeneration } from '@/lib/analytics'
 import { getAIProvider, type AIProvider } from '@/lib/ai-providers'
 import { prisma } from '@/lib/prisma'
 import { checkUserCredits, deductCredits } from '@/lib/credits'
+import { getUserByClerkId, createUser } from '@/lib/db'
 
 const chatRequestSchema = z.object({
   message: z.string().min(1).max(10000),
@@ -22,14 +23,37 @@ const chatRequestSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  console.log('=== CHAT API POST REQUEST RECEIVED ===')
+  console.log('Request URL:', req.url)
+  console.log('Request method:', req.method)
+  console.log('Request headers:', Object.fromEntries(req.headers.entries()))
+  
   try {
     const { userId } = await auth()
+    console.log('User ID from auth:', userId)
     
     if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
+    }
+
+    // Get or create user in database
+    let dbUser = await getUserByClerkId(userId)
+    if (!dbUser) {
+      // Create user if they don't exist with a temporary email
+      // This will be updated when user profile is accessed
+      dbUser = await createUser({
+        clerkId: userId,
+        email: `temp_${userId}@temp.com`
+      })
+      
+      // Set default credits
+      await prisma.user.update({
+        where: { id: dbUser.id },
+        data: { credits: 100 }
+      })
     }
 
     // Rate limiting
@@ -88,7 +112,7 @@ export async function POST(req: NextRequest) {
       chat = await prisma.chat.findFirst({
         where: {
           id: chatId,
-          userId: userId
+          userId: dbUser.id
         }
       })
       
@@ -102,7 +126,7 @@ export async function POST(req: NextRequest) {
       // Create new chat
       chat = await prisma.chat.create({
         data: {
-          userId,
+          userId: dbUser.id,
           name: message.length > 50 ? message.substring(0, 50) + '...' : message,
           provider,
           model,
@@ -200,8 +224,11 @@ export async function POST(req: NextRequest) {
         cost: 0
       })
 
+      // Return specific error message if available
+      const errorMessage = error.message || 'Failed to generate response. Please try again.'
+      
       return NextResponse.json(
-        { error: 'Failed to generate response. Please try again.' },
+        { error: errorMessage },
         { status: 500 }
       )
     }

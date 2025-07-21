@@ -26,6 +26,9 @@ export async function GET() {
         credits: true,
         isAdmin: true,
         hasUnlimitedCredits: true,
+        stripeSubscriptionId: true,
+        stripePriceId: true,
+        stripeCurrentPeriodEnd: true,
         createdAt: true,
         updatedAt: true
       }
@@ -45,6 +48,9 @@ export async function GET() {
           credits: true,
           isAdmin: true,
           hasUnlimitedCredits: true,
+          stripeSubscriptionId: true,
+          stripePriceId: true,
+          stripeCurrentPeriodEnd: true,
           createdAt: true,
           updatedAt: true
         }
@@ -70,6 +76,9 @@ export async function GET() {
             credits: true,
             isAdmin: true,
             hasUnlimitedCredits: true,
+            stripeSubscriptionId: true,
+            stripePriceId: true,
+            stripeCurrentPeriodEnd: true,
             createdAt: true,
             updatedAt: true
           }
@@ -95,6 +104,9 @@ export async function GET() {
             credits: true,
             isAdmin: true,
             hasUnlimitedCredits: true,
+            stripeSubscriptionId: true,
+            stripePriceId: true,
+            stripeCurrentPeriodEnd: true,
             createdAt: true,
             updatedAt: true
           }
@@ -102,7 +114,15 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json(dbUser)
+    // Determine subscription status
+    const isPro = !!(dbUser.stripeSubscriptionId && 
+      dbUser.stripeCurrentPeriodEnd && 
+      new Date(dbUser.stripeCurrentPeriodEnd) > new Date())
+
+    return NextResponse.json({
+      ...dbUser,
+      isPro
+    })
   } catch (error) {
     console.error('[USER_PROFILE_ERROR]', error)
     return new NextResponse('Internal Error', { status: 500 })

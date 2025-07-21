@@ -318,7 +318,7 @@ export default function ProvidersPage() {
                 <div>GROQ_API_KEY=your_groq_key</div>
                 <div>GOOGLE_GEMINI_API_KEY=your_gemini_key</div>
                 <div>COHERE_API_KEY=your_cohere_key</div>
-                <div>HUGGINGFACE_API_KEY=your_hf_key</div>
+                <div>QWEN_API_KEY=your_qwen_api_key</div>
                 <div>GROK_API_KEY=your_grok_key</div>
                 <div>DEEPSEEK_API_KEY=your_deepseek_key</div>
               </div>

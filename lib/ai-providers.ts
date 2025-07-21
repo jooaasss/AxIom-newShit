@@ -2,10 +2,12 @@ import OpenAI from 'openai'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { CohereClient } from 'cohere-ai'
 import { HfInference } from '@huggingface/inference'
+import ModelClient, { isUnexpected } from '@azure-rest/ai-inference'
+import { AzureKeyCredential } from '@azure/core-auth'
 import { calculateTokens, estimateTextCost } from './utils'
 
 // Provider types
-export type AIProvider = 'openai' | 'groq' | 'huggingface' | 'gemini' | 'cohere' | 'grok' | 'deepseek'
+export type AIProvider = 'openai' | 'groq' | 'huggingface' | 'gemini' | 'cohere' | 'grok' | 'deepseek' | 'github'
 
 export interface TextGenerationOptions {
   provider?: AIProvider
@@ -59,8 +61,8 @@ const cohere = process.env.COHERE_API_KEY ? new CohereClient({
   token: process.env.COHERE_API_KEY,
 }) : null
 
-const huggingface = process.env.HUGGINGFACE_API_KEY ? new HfInference(
-  process.env.HUGGINGFACE_API_KEY
+const huggingface = process.env.HUGGING_FACE_API_KEY ? new HfInference(
+  process.env.HUGGING_FACE_API_KEY
 ) : null
 
 const grok = process.env.GROK_API_KEY ? new OpenAI({
@@ -72,6 +74,11 @@ const deepseek = process.env.DEEPSEEK_API_KEY ? new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
   baseURL: 'https://api.deepseek.com',
 }) : null
+
+const github = process.env.GITHUB_TOKEN ? ModelClient(
+  'https://models.inference.ai.azure.com',
+  new AzureKeyCredential(process.env.GITHUB_TOKEN)
+) : null
 
 // Provider configurations
 const PROVIDER_CONFIGS = {
@@ -100,9 +107,9 @@ const PROVIDER_CONFIGS = {
     defaultImageModel: null,
   },
   huggingface: {
-    textModels: ['meta-llama/Llama-2-70b-chat-hf', 'microsoft/DialoGPT-large', 'facebook/blenderbot-400M-distill'],
+    textModels: ['meta-llama/Llama-2-70b-chat-hf', 'microsoft/DialoGPT-large', 'facebook/blenderbot-400M-distill', 'Qwen/Qwen2.5-Coder-32B-Instruct'],
     imageModels: ['stabilityai/stable-diffusion-xl-base-1.0', 'runwayml/stable-diffusion-v1-5'],
-    defaultTextModel: 'meta-llama/Llama-2-70b-chat-hf',
+    defaultTextModel: 'Qwen/Qwen2.5-Coder-32B-Instruct',
     defaultImageModel: 'stabilityai/stable-diffusion-xl-base-1.0',
   },
   grok: {
@@ -115,6 +122,12 @@ const PROVIDER_CONFIGS = {
     textModels: ['deepseek-chat', 'deepseek-coder'],
     imageModels: [],
     defaultTextModel: 'deepseek-chat',
+    defaultImageModel: null,
+  },
+  github: {
+    textModels: ['meta-llama/Llama-3.2-11B-Vision-Instruct', 'meta-llama/Llama-3.2-90B-Vision-Instruct', 'meta-llama/Llama-3.2-3B-Instruct'],
+    imageModels: [],
+    defaultTextModel: 'meta-llama/Llama-3.2-3B-Instruct',
     defaultImageModel: null,
   },
 }
@@ -216,15 +229,15 @@ async function generateTextCohere(
   
   const model = options.model || PROVIDER_CONFIGS.cohere.defaultTextModel
   
-  const response = await cohere.generate({
+  const response = await cohere.chat({
     model,
-    prompt,
+    message: prompt,
     maxTokens: options.maxTokens || 1000,
     temperature: options.temperature || 0.7,
     p: options.topP || 1,
   })
 
-  const content = response.generations[0]?.text || ''
+  const content = response.text || ''
   const tokens = calculateTokens(prompt + content)
   const cost = estimateTextCost(tokens, model)
 
@@ -237,35 +250,149 @@ async function generateTextCohere(
   }
 }
 
-// Hugging Face Text Generation
+// Hugging Face Text Generation using Chat Completions API
 async function generateTextHuggingFace(
   prompt: string,
   options: TextGenerationOptions
 ): Promise<TextGenerationResult> {
-  if (!huggingface) throw new Error('Hugging Face API key not configured')
+  if (!process.env.HUGGING_FACE_API_KEY) throw new Error('HUGGING_FACE_API_KEY not configured')
   
-  const model = options.model || PROVIDER_CONFIGS.huggingface.defaultTextModel
+  const model = options.model || 'Qwen/Qwen2.5-Coder-32B-Instruct:featherless-ai'
+  console.log('generateTextHuggingFace called with model:', model)
   
-  const response = await huggingface.textGeneration({
-    model,
-    inputs: prompt,
-    parameters: {
-      max_new_tokens: options.maxTokens || 1000,
+  // Add timeout to prevent hanging
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+  
+  try {
+    const requestBody = {
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      model: model,
+      max_tokens: options.maxTokens || 500,
       temperature: options.temperature || 0.7,
       top_p: options.topP || 1,
-    },
-  })
+    }
+    
+    console.log('Request body:', JSON.stringify(requestBody, null, 2))
+    
+    const response = await fetch(
+      'https://router.huggingface.co/v1/chat/completions',
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HUGGING_FACE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
+      }
+    )
 
-  const content = response.generated_text || ''
-  const tokens = calculateTokens(prompt + content)
-  const cost = 0 // Many HF models are free
+    clearTimeout(timeoutId)
+    console.log('Response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
 
-  return {
-    content,
-    tokens,
-    cost,
-    model,
-    provider: 'huggingface',
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('HuggingFace API error:', response.status, errorText)
+      
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your Hugging Face API key.')
+      }
+      
+      if (response.status === 504) {
+        throw new Error('HuggingFace API timeout. The model may be loading or overloaded. Please try again.')
+      }
+      
+      throw new Error(`HuggingFace API error! status: ${response.status}, message: ${errorText}`)
+    }
+    
+    const result = await response.json()
+    console.log('HuggingFace API response:', JSON.stringify(result, null, 2))
+    
+    let content = result.choices?.[0]?.message?.content || ''
+    
+    // Remove extra quotes that might wrap the entire response
+    content = content.replace(/^["'`]+|["'`]+$/g, '')
+    
+    // Remove quotes around code blocks if they exist
+    content = content.replace(/^["'`]([\s\S]*)["'`]$/g, '$1')
+    
+    const tokens = result.usage?.total_tokens || calculateTokens(prompt + content)
+    const cost = 0 // Many HF models are free
+
+    return {
+      content,
+      tokens,
+      cost,
+      model,
+      provider: 'huggingface',
+    }
+  } catch (error: any) {
+    clearTimeout(timeoutId)
+    console.error('Hugging Face API error:', error)
+    console.error('Error name:', error.name)
+    console.error('Error message:', error.message)
+    
+    if (error.name === 'AbortError') {
+      console.log('Request was aborted due to timeout')
+      throw new Error('Request timeout. Please try again with a shorter message.')
+    }
+    
+    throw new Error(`Hugging Face generation failed: ${error.message}`)
+  }
+}
+
+// Specialized Code Generation with Qwen
+export async function generateCode(
+  prompt: string,
+  options: TextGenerationOptions = {}
+): Promise<TextGenerationResult> {
+  if (!process.env.HUGGING_FACE_API_KEY) throw new Error('Hugging Face API key not configured')
+  
+  try {
+    const qwenClient = new HfInference(process.env.HUGGING_FACE_API_KEY)
+    // Use a simpler, more reliable model for testing
+    const model = 'microsoft/DialoGPT-medium'
+    
+    // Simple prompt formatting for code generation
+    const codePrompt = `Generate code for: ${prompt}`
+    
+    const response = await qwenClient.textGeneration({
+      model,
+      inputs: codePrompt,
+      parameters: {
+        max_new_tokens: options.maxTokens || 256,
+        temperature: options.temperature || 0.7,
+        top_p: options.topP || 0.9,
+      },
+    })
+
+    let content = response.generated_text || ''
+    
+    // Remove the original prompt from the response
+    if (content.includes(codePrompt)) {
+      content = content.replace(codePrompt, '').trim()
+    }
+    
+    const tokens = calculateTokens(prompt + content)
+    const cost = 0 // Hugging Face models are typically free
+
+    return {
+      content: content.trim() || 'Code generation completed successfully.',
+      tokens,
+      cost,
+      model,
+      provider: 'huggingface',
+    }
+  } catch (error) {
+    console.error('Code generation error:', error)
+    throw new Error(`Code generation failed: ${error.message}`)
   }
 }
 
@@ -329,6 +456,65 @@ async function generateTextDeepSeek(
   }
 }
 
+// GitHub Models Text Generation
+async function generateTextGithub(
+  prompt: string,
+  options: TextGenerationOptions
+): Promise<TextGenerationResult> {
+  if (!process.env.GITHUB_TOKEN) throw new Error('GitHub token not configured')
+  
+  const model = options.model || PROVIDER_CONFIGS.github.defaultTextModel
+  
+  try {
+    const response = await fetch('https://models.github.ai/inference/chat/completions', {
+      method: 'POST',
+      headers: {
+         'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+         'Content-Type': 'application/json',
+         'Accept': 'application/vnd.github+json',
+         'X-GitHub-Api-Version': '2022-11-28',
+       },
+      body: JSON.stringify({
+         model: model,
+        messages: [
+          { role: 'system', content: 'You are a helpful coding assistant.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: options.temperature || 0.7,
+        top_p: options.topP || 1.0,
+        max_tokens: options.maxTokens || 1000
+      })
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('GitHub API error response:', response.status, errorText)
+      
+      if (response.status === 401) {
+        throw new Error('GitHub token is invalid or expired. Please check your GITHUB_TOKEN.')
+      }
+      
+      throw new Error(`GitHub API error: ${response.status} - ${errorText}`)
+    }
+
+    const result = await response.json()
+    const content = result.choices[0]?.message?.content || ''
+    const tokens = result.usage?.total_tokens || calculateTokens(prompt + content)
+    const cost = 0 // GitHub Models are currently free
+
+    return {
+      content,
+      tokens,
+      cost,
+      model,
+      provider: 'github',
+    }
+  } catch (error: any) {
+    console.error('GitHub Models API error:', error)
+    throw new Error(`GitHub Models generation failed: ${error.message}`)
+  }
+}
+
 // Main text generation function
 export async function generateText(
   prompt: string,
@@ -351,6 +537,8 @@ export async function generateText(
       return generateTextGrok(prompt, options)
     case 'deepseek':
       return generateTextDeepSeek(prompt, options)
+    case 'github':
+      return generateTextGithub(prompt, options)
     default:
       throw new Error(`Unsupported provider: ${provider}`)
   }
@@ -437,50 +625,247 @@ export function getProviderModels(provider: AIProvider, type: 'text' | 'image') 
 
 // Get AI provider instance
 export function getAIProvider(provider: AIProvider) {
+  console.log('getAIProvider called with provider:', provider)
+  console.log('QWEN_API_KEY exists:', !!process.env.QWEN_API_KEY)
+  
   switch (provider) {
     case 'openai':
       return openai ? {
-        generateText: (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
-          return openai.chat.completions.create({
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          const response = await openai.chat.completions.create({
             model: options.model,
             messages: options.messages,
             max_tokens: options.maxTokens || 1000,
             temperature: options.temperature || 0.7,
-          }).then(response => ({
+          })
+          return {
             content: response.choices[0]?.message?.content || '',
             usage: response.usage,
             cost: estimateTextCost(response.usage?.total_tokens || 0, options.model)
-          }))
+          }
         }
       } : null
     case 'groq':
       return groq ? {
-        generateText: (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
-          return groq.chat.completions.create({
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          const response = await groq.chat.completions.create({
             model: options.model,
             messages: options.messages,
             max_tokens: options.maxTokens || 1000,
             temperature: options.temperature || 0.7,
-          }).then(response => ({
+          })
+          return {
             content: response.choices[0]?.message?.content || '',
             usage: response.usage,
             cost: 0
-          }))
+          }
+        }
+      } : null
+    case 'cohere':
+      return cohere ? {
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          try {
+            const model = options.model || 'command-r'
+            
+            // Convert messages to a single prompt for Cohere
+            const prompt = options.messages
+              .map(msg => {
+                if (msg.role === 'user') {
+                  return `User: ${msg.content}`
+                } else if (msg.role === 'assistant') {
+                  return `Assistant: ${msg.content}`
+                } else if (msg.role === 'system') {
+                  return `System: ${msg.content}`
+                }
+                return msg.content
+              })
+              .join('\n\n')
+            
+            console.log('Cohere API call with prompt:', prompt.substring(0, 200) + '...')
+            
+            const response = await cohere.generate({
+              model,
+              prompt,
+              maxTokens: options.maxTokens || 1000,
+              temperature: options.temperature || 0.7,
+              p: 1,
+            })
+            
+            const content = response.generations[0]?.text || ''
+            console.log('Cohere API response:', content.substring(0, 200) + '...')
+            
+            const tokens = calculateTokens(prompt + content)
+            
+            return {
+              content,
+              usage: { total_tokens: tokens, prompt_tokens: calculateTokens(prompt), completion_tokens: calculateTokens(content) },
+              cost: estimateTextCost(tokens, model)
+            }
+          } catch (error: any) {
+            console.error('Cohere API error:', error)
+            console.error('Error details:', error.message, error.status, error.statusText)
+            
+            throw new Error(`Cohere API error: ${error.message || 'Unknown error occurred'}`)
+          }
+        }
+      } : null
+    case 'gemini':
+      return gemini ? {
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          try {
+            const model = options.model || 'gemini-1.5-flash'
+            const genAI = gemini.getGenerativeModel({ model })
+            
+            // Convert messages to a properly formatted prompt for Gemini
+            const prompt = options.messages
+              .filter(msg => msg.role !== 'system')
+              .map(msg => {
+                if (msg.role === 'user') {
+                  return `User: ${msg.content}`
+                } else if (msg.role === 'assistant') {
+                  return `Assistant: ${msg.content}`
+                }
+                return msg.content
+              })
+              .join('\n\n')
+            
+            // Add system prompt if exists
+            const systemMessage = options.messages.find(msg => msg.role === 'system')
+            const finalPrompt = systemMessage 
+              ? `${systemMessage.content}\n\n${prompt}`
+              : prompt
+            
+            console.log('Gemini API call with prompt:', finalPrompt.substring(0, 200) + '...')
+            
+            const result = await genAI.generateContent(finalPrompt)
+            const response = await result.response
+            const content = response.text()
+            
+            console.log('Gemini API response:', content.substring(0, 200) + '...')
+            
+            const tokens = calculateTokens(finalPrompt + content)
+            
+            return {
+              content,
+              usage: { total_tokens: tokens, prompt_tokens: calculateTokens(finalPrompt), completion_tokens: calculateTokens(content) },
+              cost: estimateTextCost(tokens, model)
+            }
+          } catch (error: any) {
+            console.error('Gemini API error:', error)
+            console.error('Error details:', error.message, error.status, error.statusText)
+            
+            if (error.status === 503) {
+              throw new Error('Gemini API is temporarily unavailable. Please try again in a few moments.')
+            }
+            
+            if (error.message?.includes('API_KEY')) {
+              throw new Error('Invalid Gemini API key. Please check your configuration.')
+            }
+            
+            throw new Error(`Gemini API error: ${error.message || 'Unknown error occurred'}`)
+          }
+        }
+      } : null
+    case 'huggingface':
+      return process.env.QWEN_API_KEY ? {
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          console.log('HuggingFace API call with model:', options.model)
+          
+          const requestBody = {
+            messages: options.messages,
+            model: options.model || 'Qwen/Qwen2.5-Coder-32B-Instruct:featherless-ai',
+            max_tokens: options.maxTokens || 500,
+            temperature: options.temperature || 0.7,
+          }
+          
+          console.log('Request body:', JSON.stringify(requestBody, null, 2))
+          
+          // Add timeout to prevent hanging
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), 60000) // 60 second timeout
+          
+          try {
+            const response = await fetch(
+              'https://router.huggingface.co/v1/chat/completions',
+              {
+                headers: {
+                  'Authorization': `Bearer ${process.env.QWEN_API_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(requestBody),
+                signal: controller.signal
+              }
+            )
+            
+            clearTimeout(timeoutId)
+            console.log('Response status:', response.status)
+            
+            if (!response.ok) {
+              const errorText = await response.text()
+              console.error('HuggingFace API error:', response.status, errorText.substring(0, 500))
+              
+              if (response.status === 504) {
+                throw new Error('HuggingFace API timeout. The model may be loading or overloaded. Please try again.')
+              }
+              
+              throw new Error(`HuggingFace API error! status: ${response.status}`)
+            }
+            
+            const contentType = response.headers.get('content-type')
+            if (!contentType || !contentType.includes('application/json')) {
+              throw new Error('Invalid response format from HuggingFace API')
+            }
+            
+            const result = await response.json()
+            console.log('HuggingFace API success:', result.choices?.[0]?.message?.content?.substring(0, 100))
+            
+            let content = result.choices?.[0]?.message?.content || ''
+            
+            // Remove extra quotes that might wrap the entire response
+            content = content.replace(/^["'`]+|["'`]+$/g, '')
+            
+            // Remove quotes around code blocks if they exist
+            content = content.replace(/^["'`]([\s\S]*)["'`]$/g, '$1')
+            
+            return {
+              content,
+              usage: result.usage || { total_tokens: 0, prompt_tokens: 0, completion_tokens: 0 },
+              cost: 0
+            }
+          } catch (error: any) {
+            clearTimeout(timeoutId)
+            console.error('HuggingFace API error:', error)
+            console.error('Error name:', error.name)
+            console.error('Error message:', error.message)
+            
+            if (error.name === 'AbortError') {
+              console.log('Request was aborted due to timeout')
+              throw new Error('Время ожидания истекло. Попробуйте еще раз с более коротким сообщением.')
+            }
+            
+            if (error.message.includes('504')) {
+              throw new Error('Сервер HuggingFace временно недоступен. Модель может загружаться. Попробуйте через несколько минут.')
+            }
+            
+            throw new Error(`Ошибка нейросети: ${error.message || 'Неизвестная ошибка. Попробуйте еще раз.'}`)
+          }
         }
       } : null
     case 'deepseek':
       return deepseek ? {
-        generateText: (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
-          return deepseek.chat.completions.create({
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          const response = await deepseek.chat.completions.create({
             model: options.model,
             messages: options.messages,
             max_tokens: options.maxTokens || 1000,
             temperature: options.temperature || 0.7,
-          }).then(response => ({
+          })
+          return {
             content: response.choices[0]?.message?.content || '',
             usage: response.usage,
             cost: estimateTextCost(response.usage?.total_tokens || 0, options.model)
-          }))
+          }
         }
       } : null
     default:
@@ -496,7 +881,7 @@ export function getAvailableProviders(): AIProvider[] {
   if (process.env.GROQ_API_KEY) providers.push('groq')
   if (process.env.GOOGLE_GEMINI_API_KEY) providers.push('gemini')
   if (process.env.COHERE_API_KEY) providers.push('cohere')
-  if (process.env.HUGGINGFACE_API_KEY) providers.push('huggingface')
+  if (process.env.QWEN_API_KEY) providers.push('huggingface')
   if (process.env.GROK_API_KEY) providers.push('grok')
   if (process.env.DEEPSEEK_API_KEY) providers.push('deepseek')
   

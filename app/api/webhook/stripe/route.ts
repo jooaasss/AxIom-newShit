@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build', {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2024-06-20',
 })
 
 export async function POST(req: Request) {
@@ -28,28 +28,52 @@ export async function POST(req: Request) {
 
   // Handle successful checkout sessions
   if (event.type === 'checkout.session.completed') {
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    )
-
     if (!session?.metadata?.userId) {
       return new NextResponse('User ID is required', { status: 400 })
     }
 
-    // Update user with subscription info
-    await prisma.user.update({
-      where: {
-        id: session.metadata.userId,
-      },
-      data: {
-        stripeSubscriptionId: subscription.id,
-        stripeCustomerId: subscription.customer as string,
-        stripePriceId: subscription.items.data[0].price.id,
-        stripeCurrentPeriodEnd: new Date(
-          subscription.current_period_end * 1000
-        ),
-      },
-    })
+    // Check if this is a subscription or one-time payment
+    if (session.mode === 'subscription' && session.subscription) {
+      // Handle subscription
+      const subscription = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      )
+
+      await prisma.user.update({
+        where: {
+          id: session.metadata.userId,
+        },
+        data: {
+          stripeSubscriptionId: subscription.id,
+          stripeCustomerId: subscription.customer as string,
+          stripePriceId: subscription.items.data[0].price.id,
+          stripeCurrentPeriodEnd: new Date(
+            subscription.current_period_end * 1000
+          ),
+        },
+      })
+    } else if (session.mode === 'payment' && session.metadata?.credits) {
+      // Handle credit purchase
+      const credits = parseInt(session.metadata.credits)
+      
+      // Get current user credits and add new credits
+      const user = await prisma.user.findUnique({
+        where: { id: session.metadata.userId },
+        select: { credits: true }
+      })
+      
+      if (user) {
+        await prisma.user.update({
+          where: {
+            id: session.metadata.userId,
+          },
+          data: {
+            credits: (user.credits || 0) + credits,
+            stripeCustomerId: session.customer as string,
+          },
+        })
+      }
+    }
   }
 
   // Handle subscription updates

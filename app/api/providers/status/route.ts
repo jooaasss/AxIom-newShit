@@ -44,7 +44,7 @@ function getEnvKeyForProvider(provider: AIProvider): string {
     groq: 'GROQ_API_KEY',
     gemini: 'GOOGLE_GEMINI_API_KEY',
     cohere: 'COHERE_API_KEY',
-    huggingface: 'HUGGINGFACE_API_KEY',
+    huggingface: 'QWEN_API_KEY',
     grok: 'GROK_API_KEY',
     deepseek: 'DEEPSEEK_API_KEY'
   }

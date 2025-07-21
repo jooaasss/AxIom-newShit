@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
+import { generateText } from '@/lib/ai-providers'
 
 export async function POST(req: Request) {
   try {
@@ -38,24 +39,28 @@ export async function POST(req: Request) {
       return new NextResponse("Insufficient credits", { status: 402 })
     }
 
-    // Simulate AI code generation
-    const generatedCode = `// This is a simulated AI-generated code based on your prompt: "${prompt}"
-// In a real implementation, this would be replaced with an actual call to an AI service like OpenAI's GPT.
-
-function exampleFunction() {
-  // This is just a placeholder function
-  console.log("Hello, world!");
-  
-  // Some more code to demonstrate syntax highlighting
-  const items = [1, 2, 3, 4, 5];
-  const doubled = items.map(item => item * 2);
-  
-  return doubled;
-}
-
-// Call the function
-exampleFunction();
-`
+    // Generate code using Hugging Face provider with fallback
+    let result
+    try {
+      result = await generateText(`Generate clean, well-commented code for: ${prompt}`, {
+        provider: 'huggingface',
+        model: 'Qwen/Qwen2.5-Coder-32B-Instruct:featherless-ai',
+        maxTokens: 1000,
+        temperature: 0.3,
+      })
+    } catch (aiError) {
+      console.error('AI generation failed, using fallback:', aiError)
+      // Fallback response if AI fails
+      result = {
+        content: `// Generated code for: ${prompt}\n\nfunction generatedFunction() {\n  // TODO: Implement your logic here\n  console.log('Code generation request: ${prompt}');\n  return 'success';\n}\n\n// Note: AI generation temporarily unavailable`,
+        tokens: 50,
+        cost: 0,
+        model: 'fallback',
+        provider: 'huggingface'
+      }
+    }
+    
+    const generatedCode = result.content
 
     // Create generation record
     const generation = await prisma.generation.create({
@@ -77,7 +82,8 @@ exampleFunction();
 
     return NextResponse.json(generation)
   } catch (error) {
-    console.error('[CODE_GENERATION]', error)
-    return new NextResponse("Internal Error", { status: 500 })
+    console.error('[CODE_GENERATION] Detailed error:', error)
+    console.error('[CODE_GENERATION] Error stack:', error.stack)
+    return new NextResponse(`Internal Error: ${error.message}`, { status: 500 })
   }
 }
