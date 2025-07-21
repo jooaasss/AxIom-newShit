@@ -93,25 +93,39 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
 
   const handleSubscription = async () => {
     setIsLoading(true)
+    console.log('🚀 Starting subscription process...')
+    console.log('Selected plan:', selectedPlan)
+    
     try {
       const requestData = {
         priceId: selectedPlan?.priceId,
         cycle: selectedPlan?.cycle
       }
+      console.log('📤 Sending request to /api/stripe with data:', requestData)
       
       const result = await makeApiRequest(
         () => apiClient.post('/api/stripe', requestData),
         {
-          context: 'Getting subscription URL',
-          customErrorMessage: 'Failed to get subscription link. Please try again.',
+          context: 'Starting subscription',
+          customErrorMessage: 'Failed to start subscription. Please try again.',
         }
       )
       
-      if (result) {
+      console.log('📥 Received response from /api/stripe:', result)
+      
+      if (result && result.data && result.data.url) {
+        console.log('✅ Redirecting to Stripe checkout:', result.data.url)
         window.location.href = result.data.url
+      } else {
+        console.error('❌ No URL received from Stripe API')
+        toast({
+          title: 'Error',
+          description: 'No payment URL received. Please try again.',
+          variant: 'destructive',
+        })
       }
     } catch (error) {
-      console.error('Subscription error:', error)
+      console.error('❌ Subscription error:', error)
       toast({
         title: 'Error',
         description: 'Failed to start subscription process. Please try again.',
