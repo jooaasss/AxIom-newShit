@@ -10,6 +10,17 @@
   SECRETS_SCAN_OMIT_PATHS = ".netlify/**,.next/**,node_modules/**"
   CI = "true"
 
+# Next.js plugin for proper API routes handling
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# API routes should not be redirected
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
+
+# All other routes go to Next.js
 [[redirects]]
   from = "/*"
   to = "/index.html"
