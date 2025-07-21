@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic'
 
 type Generation = {
   id: string
-  type: 'text' | 'code' | 'image' | 'website'
+  type: 'text' | 'code' | 'image' | 'search'
   prompt: string
   createdAt: string
 }
@@ -100,7 +100,7 @@ export default function HistoryPage() {
                             } ${
                               generation.type === 'image' ? 'bg-green-100 text-green-800' : ''
                             } ${
-                              generation.type === 'website' ? 'bg-orange-100 text-orange-800' : ''
+                              generation.type === 'search' ? 'bg-orange-100 text-orange-800' : ''
                             }`}
                           >
                             {generation.type}

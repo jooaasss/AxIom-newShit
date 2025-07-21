@@ -1,13 +1,13 @@
 # AxIom - AI-Powered Creation Platform
 
-AxIom is a comprehensive AI-powered platform that enables users to generate text, code, images, and websites using advanced artificial intelligence models.
+AxIom is a comprehensive AI-powered platform that enables users to generate text, code, images, and perform intelligent AI searches using advanced artificial intelligence models.
 
 ## Features
 
 - **Text Generation**: Create high-quality content with AI assistance
 - **Code Generation**: Generate code snippets and complete applications
 - **Image Creation**: Generate stunning visuals and artwork
-- **Website Building**: Create complete websites with AI
+- **AI Search**: Perform intelligent searches with comprehensive results
 - **Multi-Provider Support**: Integration with multiple AI providers
 - **User Management**: Secure authentication and user profiles
 - **Credit System**: Flexible usage tracking and billing

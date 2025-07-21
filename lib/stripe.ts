@@ -10,26 +10,26 @@ export { stripe }
 // Credit packages
 export const CREDIT_PACKAGES = {
   starter: {
-    credits: 50,
-    price: 9.99,
+    credits: 1000,
+    price: 5,
     priceId: process.env.STRIPE_STARTER_PRICE_ID,
-    name: 'Starter Pack',
-    description: '50 credits for basic usage',
+    name: 'Стартовый пакет',
+    description: '1000 кредитов для базового использования',
   },
   pro: {
-    credits: 200,
-    price: 29.99,
+    credits: 5000,
+    price: 20,
     priceId: process.env.STRIPE_PRO_PRICE_ID,
-    name: 'Pro Pack',
-    description: '200 credits for power users',
+    name: 'Профессиональный пакет',
+    description: '5000 кредитов для продвинутых пользователей',
     popular: true,
   },
   enterprise: {
-    credits: 500,
-    price: 59.99,
+    credits: 10000,
+    price: 35,
     priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID,
-    name: 'Enterprise Pack',
-    description: '500 credits for teams',
+    name: 'Корпоративный пакет',
+    description: '10000 кредитов для команд',
   },
 }
 

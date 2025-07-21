@@ -29,7 +29,7 @@ export default function DocumentationPage() {
             Documentation
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Complete guide to using AxIom's AI-powered creation platform. Learn how to generate text, code, images, and websites with our advanced tools.
+            Complete guide to using AxIom's AI-powered creation platform. Learn how to generate text, code, images, and search with our advanced AI tools.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function DocumentationPage() {
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">2. Choose Tool</div>
-                <p className="text-sm text-muted-foreground">Select from text, code, image, or website generation tools</p>
+                <p className="text-sm text-muted-foreground">Select from text, code, image generation, or AI-powered search tools</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">3. Create</div>
@@ -132,15 +132,15 @@ export default function DocumentationPage() {
               <div className="w-12 h-12 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center mb-4">
                 <Globe className="h-6 w-6 text-orange-600" />
               </div>
-              <CardTitle>Website Generation</CardTitle>
+              <CardTitle>AI Search</CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Build complete websites and landing pages with modern design and responsive layouts.
+                Get intelligent search results and answers powered by advanced AI technology.
               </CardDescription>
               <div className="mt-4">
-                <Badge variant="secondary">React</Badge>
-                <Badge variant="secondary" className="ml-2">Tailwind</Badge>
+                <Badge variant="secondary">GPT-4</Badge>
+                <Badge variant="secondary" className="ml-2">Smart Search</Badge>
               </div>
             </CardContent>
           </Card>
@@ -242,17 +242,17 @@ export default function DocumentationPage() {
             <div className="grid md:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">Free Plan</div>
-                <div className="text-2xl font-bold text-green-600 mb-2">10 Credits</div>
+                <div className="text-2xl font-bold text-green-600 mb-2">10 free generations</div>
                 <p className="text-sm text-muted-foreground">Get started with basic features</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">Pro Plan</div>
-                <div className="text-2xl font-bold text-blue-600 mb-2">$20/month</div>
+                <div className="text-2xl font-bold text-blue-600 mb-2">$24/month</div>
                 <p className="text-sm text-muted-foreground">Unlimited generations for power users</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2">Pay As You Go</div>
-                <div className="text-2xl font-bold text-purple-600 mb-2">$7</div>
+                <div className="text-2xl font-bold text-purple-600 mb-2">$5</div>
                 <p className="text-sm text-muted-foreground">Buy credits for occasional use</p>
               </div>
             </div>

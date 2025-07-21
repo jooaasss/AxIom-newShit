@@ -75,7 +75,7 @@ enum GenerationType {
   TEXT
   IMAGE
   CODE
-  WEBSITE
+  SEARCH
 }
 
 enum GenerationStatus {

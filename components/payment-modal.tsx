@@ -20,46 +20,47 @@ import { useToast } from '@/components/ui/use-toast'
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
-  selectedPlan?: 'pro' | 'credits' | null
+  selectedPlan?: {
+    type: 'free' | 'pro' | 'credits'
+    priceId?: string
+    cycle?: 'monthly' | 'annually'
+    amount?: number
+    price?: number
+  } | null
 }
 
 const plans = {
   pro: {
-    name: 'Pro Subscription',
-    price: '$20',
-    period: 'per month',
-    description: 'Unlimited generations for power users',
+    name: 'Pro подписка',
+    description: 'Безлимитные генерации для продвинутых пользователей',
     features: [
-      'Unlimited text generation',
-      'Unlimited code generation', 
-      'Unlimited image generation',
-      'Unlimited website generation',
-      'Priority support',
-      'Advanced AI models',
+      'Безлимитные генерации*',
+      'Продвинутая генерация текста и кода',
+      'Генерация изображений и AI Поиск',
+      'Приоритетная поддержка',
+      'Продвинутые AI модели',
     ],
     popular: true,
   },
   credits: {
-    name: 'Pay As You Go',
-    price: 'From $10',
-    period: 'one-time',
-    description: 'Buy credits for occasional use',
+    name: 'Кредитные пакеты',
+    description: 'Покупайте кредиты для периодического использования',
     features: [
-      'Text: 1 credit per generation',
-      'Code: 2 credits per generation',
-      'Image: 3 credits per generation',
-      'Website: 5 credits per generation',
-      'No monthly commitment',
-      'Bulk discounts available',
+      'Текст: 1 кредит за генерацию',
+      'Код: 2 кредита за генерацию',
+      'Изображение: 3 кредита за генерацию',
+      'AI Поиск: 1 кредит за запрос',
+      'Без ежемесячных обязательств',
+      'Скидки при покупке больших пакетов',
     ],
     popular: false,
   },
 }
 
 const creditPackages = [
-  { amount: 100, price: 7, popular: false },
-  { amount: 500, price: 15, popular: true },
-  { amount: 1000, price: 40, popular: false },
+  { amount: 1000, price: 5, popular: true },
+  { amount: 5000, price: 20, popular: false },
+  { amount: 10000, price: 35, popular: false },
 ]
 
 export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProps) {
@@ -100,9 +101,22 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
   }
 
   const renderPlanDetails = () => {
-    if (!selectedPlan || !plans[selectedPlan]) return null
+    if (!selectedPlan) return null
 
-    const plan = plans[selectedPlan]
+    let plan, price, period
+    
+    if (selectedPlan.type === 'pro') {
+      plan = plans.pro
+      price = selectedPlan.cycle === 'annually' ? '$288' : '$24'
+      period = selectedPlan.cycle === 'annually' ? 'в год' : 'в месяц'
+    } else if (selectedPlan.type === 'credits') {
+      plan = plans.credits
+      const pkg = creditPackages.find(p => p.amount === selectedPlan.amount)
+      price = pkg ? `$${pkg.price}` : 'N/A'
+      period = 'единоразово'
+    } else {
+      return null
+    }
 
     return (
       <Card className="mb-6">
@@ -110,18 +124,19 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                {plan.name}
+                {selectedPlan.type === 'credits' && selectedPlan.amount ? 
+                  `${selectedPlan.amount} кредитов` : plan.name}
                 {plan.popular && (
                   <Badge variant="default" className="text-xs">
-                    Popular
+                    Популярный
                   </Badge>
                 )}
               </CardTitle>
               <CardDescription>{plan.description}</CardDescription>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">{plan.price}</div>
-              <div className="text-sm text-muted-foreground">{plan.period}</div>
+              <div className="text-2xl font-bold">{price}</div>
+              <div className="text-sm text-muted-foreground">{period}</div>
             </div>
           </div>
         </CardHeader>
@@ -140,11 +155,11 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
   }
 
   const renderCreditPackages = () => {
-    if (selectedPlan !== 'credits') return null
+    if (selectedPlan?.type !== 'credits') return null
 
     return (
       <div className="space-y-3 mb-6">
-        <h4 className="font-medium">Choose a credit package:</h4>
+        <h4 className="font-medium">Выберите кредитный пакет:</h4>
         {creditPackages.map((pkg) => (
           <Card 
             key={pkg.amount}
@@ -162,9 +177,9 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
                     <Zap className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-medium">{pkg.amount} Credits</div>
+                    <div className="font-medium">{pkg.amount} кредитов</div>
                     <div className="text-sm text-muted-foreground">
-                      ${(pkg.price / pkg.amount * 100).toFixed(1)} per 100 credits
+                      ${(pkg.price / pkg.amount * 1000).toFixed(1)} за 1000 кредитов
                     </div>
                   </div>
                 </div>
@@ -172,7 +187,7 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
                   <div className="text-xl font-bold">${pkg.price}</div>
                   {pkg.popular && (
                     <Badge variant="default" className="text-xs">
-                      Best Value
+                      Выгодно
                     </Badge>
                   )}
                 </div>
@@ -185,28 +200,28 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
   }
 
   const handlePayment = () => {
-    if (selectedPlan === 'pro') {
+    if (selectedPlan?.type === 'pro') {
       handleSubscription()
-    } else if (selectedPlan === 'credits' && selectedCreditPackage) {
+    } else if (selectedPlan?.type === 'credits' && selectedCreditPackage) {
       handleBuyCredits(selectedCreditPackage)
     }
   }
 
   const isPaymentDisabled = () => {
-    if (selectedPlan === 'credits') {
+    if (selectedPlan?.type === 'credits') {
       return !selectedCreditPackage || isLoading
     }
     return isLoading
   }
 
   const getButtonText = () => {
-    if (isLoading) return 'Processing...'
-    if (selectedPlan === 'pro') return 'Subscribe Now'
-    if (selectedPlan === 'credits') {
-      if (!selectedCreditPackage) return 'Select Package'
-      return `Buy ${selectedCreditPackage} Credits`
+    if (isLoading) return 'Обработка...'
+    if (selectedPlan?.type === 'pro') return 'Подписаться'
+    if (selectedPlan?.type === 'credits') {
+      if (!selectedCreditPackage) return 'Выберите пакет'
+      return `Купить ${selectedCreditPackage} кредитов`
     }
-    return 'Continue'
+    return 'Продолжить'
   }
 
   return (
@@ -215,10 +230,10 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="h-5 w-5" />
-            Complete Your Purchase
+            Завершите покупку
           </DialogTitle>
           <DialogDescription>
-            You're about to upgrade your account. Review your selection below.
+            Вы собираетесь обновить свой аккаунт. Проверьте ваш выбор ниже.
           </DialogDescription>
         </DialogHeader>
 
@@ -229,18 +244,18 @@ export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProp
           <div className="rounded-lg bg-muted/50 p-4">
             <div className="flex items-center gap-2 text-sm">
               <Check className="h-4 w-4 text-green-500" />
-              <span>Secure payment with Stripe</span>
+              <span>Безопасная оплата через Stripe</span>
             </div>
             <div className="flex items-center gap-2 text-sm mt-1">
               <Check className="h-4 w-4 text-green-500" />
-              <span>Cancel anytime (for subscriptions)</span>
+              <span>Отмена в любое время (для подписок)</span>
             </div>
           </div>
         </div>
 
         <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            Cancel
+            Отмена
           </Button>
           <Button 
             onClick={handlePayment}

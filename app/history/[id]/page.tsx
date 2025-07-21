@@ -14,7 +14,7 @@ import Image from 'next/image'
 
 type Generation = {
   id: string
-  type: 'text' | 'code' | 'image' | 'website'
+  type: 'text' | 'code' | 'image' | 'search'
   prompt: string
   output: string
   createdAt: string
@@ -76,9 +76,9 @@ export default function GenerationDetailPage({
       return
     } else if (generation.type === 'code') {
       filename += '.txt'
-    } else if (generation.type === 'website') {
-      filename += '.html'
-      type = 'text/html'
+    } else if (generation.type === 'search') {
+      filename += '.txt'
+      type = 'text/plain'
     } else {
       filename += '.txt'
     }
@@ -131,7 +131,7 @@ export default function GenerationDetailPage({
             <CardTitle>Prompt</CardTitle>
             <Badge
               variant="outline"
-              className={`capitalize ${generation.type === 'text' ? 'bg-blue-100 text-blue-800' : ''} ${generation.type === 'code' ? 'bg-purple-100 text-purple-800' : ''} ${generation.type === 'image' ? 'bg-green-100 text-green-800' : ''} ${generation.type === 'website' ? 'bg-orange-100 text-orange-800' : ''}`}
+              className={`capitalize ${generation.type === 'text' ? 'bg-blue-100 text-blue-800' : ''} ${generation.type === 'code' ? 'bg-purple-100 text-purple-800' : ''} ${generation.type === 'image' ? 'bg-green-100 text-green-800' : ''} ${generation.type === 'search' ? 'bg-orange-100 text-orange-800' : ''}`}
             >
               {generation.type}
             </Badge>
@@ -174,16 +174,9 @@ export default function GenerationDetailPage({
               <pre className="bg-muted p-4 rounded-md overflow-x-auto">
                 <code>{generation.output}</code>
               </pre>
-            ) : generation.type === 'website' ? (
-              <div>
-                <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                  <code>{generation.output}</code>
-                </pre>
-                <div className="mt-4">
-                  <Button onClick={() => window.open(`data:text/html;charset=utf-8,${encodeURIComponent(generation.output)}`, '_blank')}>
-                    Preview Website
-                  </Button>
-                </div>
+            ) : generation.type === 'search' ? (
+              <div className="bg-muted p-4 rounded-md">
+                <p className="whitespace-pre-wrap">{generation.output}</p>
               </div>
             ) : (
               <p className="whitespace-pre-wrap">{generation.output}</p>

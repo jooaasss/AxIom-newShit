@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
       title: "Description of Services",
       icon: Shield,
       content: [
-        "AI-powered text, code, image, and website generation",
+        "AI-powered text, code, image generation, and AI search",
         "Cloud-based platform accessible via web browser",
         "User account management and billing services",
         "Customer support and documentation",

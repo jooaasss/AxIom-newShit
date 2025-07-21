@@ -131,29 +131,27 @@ export async function generateImage(
   }
 }
 
-// Website Generation
-export async function generateWebsite(
-  description: string,
+// AI Search functionality
+export async function performAISearch(
+  query: string,
   options: TextGenerationOptions = {}
 ): Promise<TextGenerationResult> {
-  const websitePrompt = `Create a complete, modern, responsive HTML website based on this description: ${description}
+  const searchPrompt = `Perform an intelligent search and provide comprehensive information about: ${query}
 
 Requirements:
-- Use modern HTML5, CSS3, and vanilla JavaScript
-- Include responsive design with mobile-first approach
-- Use semantic HTML elements
-- Include proper meta tags and SEO optimization
-- Add smooth animations and transitions
-- Use a modern color scheme and typography
-- Make it fully functional and interactive
-- Include comments explaining the code structure
+- Provide accurate and up-to-date information
+- Include multiple perspectives when relevant
+- Structure the response clearly with headings
+- Include relevant examples or use cases
+- Cite sources when possible
+- Make the information actionable and useful
 
-Return only the complete HTML code with embedded CSS and JavaScript.`
+Provide a detailed, well-structured response.`
 
-  return generateText(websitePrompt, {
+  return generateText(searchPrompt, {
     ...options,
-    maxTokens: 4000,
-    temperature: 0.4,
+    maxTokens: 2000,
+    temperature: 0.3,
   })
 }
 

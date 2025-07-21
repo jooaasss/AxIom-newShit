@@ -26,9 +26,9 @@ export default function FeaturesPage() {
     },
     {
       icon: Globe,
-      title: "Website Builder",
-      description: "Build complete, responsive websites with modern design and optimized performance.",
-      benefits: ["Landing pages", "E-commerce sites", "Portfolio websites", "Business pages"]
+      title: "AI Search",
+      description: "Intelligent search powered by advanced AI models for precise and contextual results.",
+      benefits: ["Smart query understanding", "Contextual results", "Multi-source search", "Real-time insights"]
     }
   ]
 
@@ -173,7 +173,7 @@ export default function FeaturesPage() {
               </div>
               <CardHeader className="text-center">
                 <CardTitle>Pro</CardTitle>
-                <div className="text-3xl font-bold">$20</div>
+                <div className="text-3xl font-bold">$24</div>
                 <CardDescription>Unlimited generations for power users</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -195,7 +195,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Website generation</span>
+                  <span className="text-sm">AI Search</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
@@ -207,7 +207,7 @@ export default function FeaturesPage() {
             <Card className="border-2">
               <CardHeader className="text-center">
                 <CardTitle>Pay As You Go</CardTitle>
-                <div className="text-3xl font-bold">$7</div>
+                <div className="text-3xl font-bold">$5</div>
                 <CardDescription>Buy credits for occasional use</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">

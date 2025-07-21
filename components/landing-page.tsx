@@ -176,7 +176,7 @@ export function LandingPage() {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-                Generate stunning text, code, images, and complete websites with our advanced AI platform. 
+                Generate stunning text, code, images, and perform intelligent AI searches with our advanced AI platform. 
                 Transform your ideas into reality in seconds.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

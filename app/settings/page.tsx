@@ -270,7 +270,7 @@ export default function SettingsPage() {
               <li>Early access to new features</li>
             </ul>
             <p className="mt-4 font-medium">
-              $20/month
+              $24/month
             </p>
           </CardContent>
           <CardFooter>
@@ -299,33 +299,33 @@ export default function SettingsPage() {
             <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
               <li>Text generation: 1 credit</li>
               <li>Code generation: 2 credits</li>
-              <li>AI Search: 3 credits</li>
-              <li>Image generation: 5 credits</li>
+              <li>AI Search: 1 credit</li>
+              <li>Image generation: 3 credits</li>
             </ul>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
             <Button 
-              onClick={() => handleBuyCredits(100)} 
-              disabled={isLoading}
-              className="w-full"
-              variant="outline"
-            >
-              100 Credits - $7
-            </Button>
-            <Button 
-              onClick={() => handleBuyCredits(500)} 
-              disabled={isLoading}
-              className="w-full"
-              variant="outline"
-            >
-              500 Credits - $15 (20% off)
-            </Button>
-            <Button 
               onClick={() => handleBuyCredits(1000)} 
               disabled={isLoading}
               className="w-full"
+              variant="outline"
             >
-              1000 Credits - $40 (30% off)
+              1000 Credits - $5
+            </Button>
+            <Button 
+              onClick={() => handleBuyCredits(5000)} 
+              disabled={isLoading}
+              className="w-full"
+              variant="outline"
+            >
+              5000 Credits - $20
+            </Button>
+            <Button 
+              onClick={() => handleBuyCredits(10000)} 
+              disabled={isLoading}
+              className="w-full"
+            >
+              10000 Credits - $35
             </Button>
           </CardFooter>
         </Card>

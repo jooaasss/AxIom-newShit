@@ -14,7 +14,7 @@ export default function CookiePolicyPage() {
       id: "essential",
       title: "Essential Cookies",
       icon: Shield,
-      description: "Required for basic website functionality",
+      description: "Required for basic platform functionality",
       required: true,
       examples: [
         "Authentication tokens",
@@ -28,7 +28,7 @@ export default function CookiePolicyPage() {
       id: "analytics",
       title: "Analytics Cookies",
       icon: BarChart3,
-      description: "Help us understand how visitors use our website",
+      description: "Help us understand how visitors use our platform",
       required: false,
       examples: [
         "Page views and traffic sources",
@@ -71,7 +71,7 @@ export default function CookiePolicyPage() {
   const thirdPartyServices = [
     {
       name: "Google Analytics",
-      purpose: "Website analytics and performance monitoring",
+      purpose: "Platform analytics and performance monitoring",
       cookies: ["_ga", "_gid", "_gat"],
       privacy: "https://policies.google.com/privacy"
     },
@@ -201,7 +201,7 @@ export default function CookiePolicyPage() {
                             <div className="flex items-start gap-2">
                               <AlertCircle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
                               <p className="text-xs text-orange-700 dark:text-orange-300">
-                                These cookies are essential for the website to function properly and cannot be disabled.
+                                These cookies are essential for the platform to function properly and cannot be disabled.
                               </p>
                             </div>
                           </div>
@@ -271,7 +271,7 @@ export default function CookiePolicyPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                    Block cookies from specific websites
+                    Block cookies from specific sites
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
@@ -295,7 +295,7 @@ export default function CookiePolicyPage() {
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Safari</h4>
-                  <p className="text-xs text-muted-foreground">Preferences → Privacy → Manage Website Data</p>
+                  <p className="text-xs text-muted-foreground">Preferences → Privacy → Manage Site Data</p>
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Edge</h4>

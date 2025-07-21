@@ -62,7 +62,7 @@ export default function AboutPage() {
     {
       step: "4",
       title: "Full Platform Launch",
-      description: "Launched complete platform with text, code, image, and website generation tools."
+      description: "Launched complete platform with text, code, image generation, and AI search tools."
     }
   ]
 
@@ -101,7 +101,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              At AxIom, we believe that creativity should have no limits. Our platform combines the power of advanced AI with intuitive design to help creators, developers, and businesses transform their ideas into reality. Whether you're writing content, building applications, creating visuals, or designing websites, we provide the tools you need to succeed in the digital age.
+              At AxIom, we believe that creativity should have no limits. Our platform combines the power of advanced AI with intuitive design to help creators, developers, and businesses transform their ideas into reality. Whether you're writing content, building applications, creating visuals, or performing intelligent searches, we provide the tools you need to succeed in the digital age.
             </p>
           </CardContent>
         </Card>

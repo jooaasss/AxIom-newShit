@@ -48,22 +48,22 @@ export async function POST(req: Request) {
     }
 
     // Calculate price based on amount of credits
-    // 100 credits = $10, 500 credits = $40, 1000 credits = $70
+    // 1000 credits = $5, 5000 credits = $20, 10000 credits = $35
     let unitAmount = 0
     let credits = 0
 
     switch (amount) {
-      case 100:
-        unitAmount = 1000 // $10.00
-        credits = 100
-        break
-      case 500:
-        unitAmount = 4000 // $40.00
-        credits = 500
-        break
       case 1000:
-        unitAmount = 7000 // $70.00
+        unitAmount = 500 // $5.00
         credits = 1000
+        break
+      case 5000:
+        unitAmount = 2000 // $20.00
+        credits = 5000
+        break
+      case 10000:
+        unitAmount = 3500 // $35.00
+        credits = 10000
         break
       default:
         return new NextResponse("Invalid amount", { status: 400 })

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, GenerationType, GenerationStatus } from '@prisma/client'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -41,9 +41,9 @@ export async function updateUserCredits(userId: string, credits: number) {
 // Generation operations
 export async function createGeneration(data: {
   userId: string
-  type: 'TEXT' | 'IMAGE' | 'CODE' | 'WEBSITE'
+  type: GenerationType
   prompt: string
-  status?: 'PROCESSING' | 'COMPLETED' | 'FAILED'
+  status?: GenerationStatus
   model?: string
 }) {
   return await db.generation.create({
@@ -56,7 +56,7 @@ export async function updateGeneration(
   data: {
     content?: string
     imageUrl?: string
-    status?: 'PROCESSING' | 'COMPLETED' | 'FAILED'
+    status?: GenerationStatus
     tokens?: number
     cost?: number
     model?: string
@@ -71,7 +71,7 @@ export async function updateGeneration(
 
 export async function getUserGenerations(
   userId: string,
-  type?: 'TEXT' | 'IMAGE' | 'CODE' | 'WEBSITE',
+  type?: GenerationType,
   limit = 20,
   offset = 0
 ) {

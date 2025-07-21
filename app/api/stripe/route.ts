@@ -60,7 +60,7 @@ export async function GET() {
               name: 'AxIom Pro',
               description: 'Unlimited AI generations',
             },
-            unit_amount: 2000, // $20.00
+            unit_amount: 2400, // $24.00
             recurring: {
               interval: 'month',
             },

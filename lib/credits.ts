@@ -5,15 +5,15 @@ export interface CreditCost {
   text: number
   image: number
   code: number
-  website: number
+  search: number
 }
 
 // Credit costs for different generation types
 export const CREDIT_COSTS: CreditCost = {
   text: 1,
-  image: 5,
+  image: 3,
   code: 2,
-  website: 3,
+  search: 1,
 }
 
 // Model-specific credit multipliers
@@ -150,23 +150,23 @@ export function getCreditPackages() {
   return [
     {
       id: 'starter',
-      name: 'Starter Pack',
-      credits: 100,
-      price: 9.99,
+      name: 'Стартовый пакет',
+      credits: 1000,
+      price: 5,
       popular: false,
     },
     {
       id: 'pro',
-      name: 'Pro Pack',
-      credits: 500,
-      price: 39.99,
+      name: 'Профессиональный пакет',
+      credits: 5000,
+      price: 20,
       popular: true,
     },
     {
       id: 'enterprise',
-      name: 'Enterprise Pack',
-      credits: 1500,
-      price: 99.99,
+      name: 'Корпоративный пакет',
+      credits: 10000,
+      price: 35,
       popular: false,
     },
   ]
