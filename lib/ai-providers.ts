@@ -869,6 +869,36 @@ export function getAIProvider(provider: AIProvider) {
           }
         }
       } : null
+    case 'github':
+      return github ? {
+        generateText: async (options: { model: string; messages: any[]; maxTokens?: number; temperature?: number }) => {
+          const response = await fetch('https://models.github.ai/inference/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github+json',
+            },
+            body: JSON.stringify({
+              model: options.model,
+              messages: options.messages,
+              max_tokens: options.maxTokens || 1000,
+              temperature: options.temperature || 0.7,
+            }),
+          })
+          
+          if (!response.ok) {
+            throw new Error(`GitHub Models API error: ${response.status}`)
+          }
+          
+          const result = await response.json()
+          return {
+            content: result.choices[0]?.message?.content || '',
+            usage: result.usage || { total_tokens: 0, prompt_tokens: 0, completion_tokens: 0 },
+            cost: 0
+          }
+        }
+      } : null
     default:
       return null
   }

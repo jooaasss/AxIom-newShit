@@ -67,8 +67,8 @@ COHERE_API_KEY=your_cohere_key
 HUGGING_FACE_API_KEY=your_huggingface_key
 GROK_API_KEY=your_grok_key
 DEEPSEEK_API_KEY=your_deepseek_key
-GITHUB_TOKEN=your_github_token
-QWEN_API_KEY=your_qwen_key
+GITHUB_TOKEN=your_github_token (для GitHub Models)
+QWEN_API_KEY=your_qwen_key (для HuggingFace)
 ```
 
 #### Application Settings
