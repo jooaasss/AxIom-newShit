@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   experimental: {
     serverComponentsExternalPackages: ["prisma"],
   },
   trailingSlash: false,
+  distDir: ".next",
   generateBuildId: async () => {
     return "build-" + Date.now();
   },

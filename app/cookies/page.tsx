@@ -2,8 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Cookie, Shield, BarChart3, Target, Settings, AlertCircle } from "lucide-react"
+import { Cookie, Shield, BarChart3, Target, Settings, AlertCircle, Zap } from "lucide-react"
 import Link from "next/link"
+import { CookieConsentManager } from "@/components/cookie-consent-manager"
 
 export default function CookiePolicyPage() {
   const lastUpdated = "January 15, 2025"
@@ -13,7 +14,7 @@ export default function CookiePolicyPage() {
       id: "essential",
       title: "Essential Cookies",
       icon: Shield,
-      description: "Required for basic website functionality",
+      description: "Required for basic platform functionality",
       required: true,
       examples: [
         "Authentication tokens",
@@ -27,7 +28,7 @@ export default function CookiePolicyPage() {
       id: "analytics",
       title: "Analytics Cookies",
       icon: BarChart3,
-      description: "Help us understand how visitors use our website",
+      description: "Help us understand how visitors use our platform",
       required: false,
       examples: [
         "Page views and traffic sources",
@@ -70,7 +71,7 @@ export default function CookiePolicyPage() {
   const thirdPartyServices = [
     {
       name: "Google Analytics",
-      purpose: "Website analytics and performance monitoring",
+      purpose: "Platform analytics and performance monitoring",
       cookies: ["_ga", "_gid", "_gat"],
       privacy: "https://policies.google.com/privacy"
     },
@@ -95,6 +96,21 @@ export default function CookiePolicyPage() {
   ]
 
   return (
+     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      {/* Navigation Header */}
+      <nav className="border-b bg-white/80 backdrop-blur-sm dark:bg-slate-900/80">
+        <div className="container mx-auto px-4 py-4">
+          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+              <Zap className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              AxIom
+            </span>
+          </Link>
+        </div>
+      </nav>
+
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
@@ -103,7 +119,7 @@ export default function CookiePolicyPage() {
             Cookie Policy
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-            Learn how Polniy uses cookies and similar technologies to enhance your experience.
+            Learn how AxIom uses cookies and similar technologies to enhance your experience.
           </p>
           <Badge variant="secondary" className="text-sm">
             Last updated: {lastUpdated}
@@ -127,7 +143,7 @@ export default function CookiePolicyPage() {
               understanding how you use our platform.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              We use both first-party cookies (set by Polniy) and third-party cookies (set by our partners) to 
+              We use both first-party cookies (set by AxIom) and third-party cookies (set by our partners) to 
               deliver our services effectively. You have control over which cookies you accept.
             </p>
           </CardContent>
@@ -185,7 +201,7 @@ export default function CookiePolicyPage() {
                             <div className="flex items-start gap-2">
                               <AlertCircle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
                               <p className="text-xs text-orange-700 dark:text-orange-300">
-                                These cookies are essential for the website to function properly and cannot be disabled.
+                                These cookies are essential for the platform to function properly and cannot be disabled.
                               </p>
                             </div>
                           </div>
@@ -255,7 +271,7 @@ export default function CookiePolicyPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                    Block cookies from specific websites
+                    Block cookies from specific sites
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
@@ -279,7 +295,7 @@ export default function CookiePolicyPage() {
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Safari</h4>
-                  <p className="text-xs text-muted-foreground">Preferences → Privacy → Manage Website Data</p>
+                  <p className="text-xs text-muted-foreground">Preferences → Privacy → Manage Site Data</p>
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Edge</h4>
@@ -292,7 +308,7 @@ export default function CookiePolicyPage() {
                 <p className="text-sm text-muted-foreground mb-3">
                   You can also manage your cookie preferences using our consent manager, which appears when you first visit our site.
                 </p>
-                <Button size="sm">Update Cookie Preferences</Button>
+                <CookieConsentManager />
               </div>
             </div>
           </CardContent>
@@ -364,9 +380,9 @@ export default function CookiePolicyPage() {
               If you have questions about our use of cookies or this Cookie Policy, please contact us:
             </p>
             <div className="space-y-2 text-sm">
-              <p><strong>Email:</strong> privacy@polniy.com</p>
+              <p><strong>Email:</strong> privacy@AxIom.com</p>
               <p><strong>Address:</strong> 123 Innovation Drive, San Francisco, CA 94105</p>
-              <p><strong>Data Protection Officer:</strong> dpo@polniy.com</p>
+              <p><strong>Data Protection Officer:</strong> dpo@AxIom.com</p>
             </div>
           </CardContent>
         </Card>
@@ -378,13 +394,14 @@ export default function CookiePolicyPage() {
             Manage your cookie preferences and learn more about how we protect your data.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg">Manage Cookie Preferences</Button>
+            <CookieConsentManager />
             <Button size="lg" variant="outline" asChild>
               <Link href="/privacy">View Privacy Policy</Link>
             </Button>
           </div>
         </div>
       </div>
-    </div>
+    </div>   
+  </div>
   )
 }

@@ -1,9 +1,18 @@
 import Stripe from 'stripe'
 import { db, getUserByClerkId, createPurchase, updatePurchase, updateUserCredits } from './db'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy_key_for_build', {
+// Use a valid test key or create a mock for development
+const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_51234567890abcdef'
+const stripe = new Stripe(stripeKey, {
   apiVersion: '2025-02-24.acacia',
 })
+
+// Check if we're using a dummy key
+const isDummyKey = !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('dummy')
+
+if (isDummyKey) {
+  console.warn('⚠️  Using dummy Stripe key. Payments will not work in production.')
+}
 
 export { stripe }
 

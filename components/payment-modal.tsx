@@ -20,8 +20,16 @@ import { useToast } from '@/components/ui/use-toast'
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
-  selectedPlan?: 'pro' | 'credits' | null
-  isProUser?: boolean
+  selectedPlan?: {
+    type: 'free' | 'pro' | 'credits'
+    priceId?: string
+    cycle?: 'monthly' | 'annually'
+    amount?: number
+    price?: number
+    credits?: number
+    name?: string
+    description?: string
+  } | null
 }
 
 const plans = {
@@ -63,7 +71,7 @@ const creditPackages = [
   { amount: 1000, price: 70, popular: false },
 ]
 
-export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, selectedPlan }: PaymentModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedCreditPackage, setSelectedCreditPackage] = useState<number | null>(null)
   const { toast } = useToast()
@@ -71,8 +79,13 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
   const handleSubscription = async () => {
     setIsLoading(true)
     try {
+      const requestData = {
+        priceId: selectedPlan?.priceId,
+        cycle: selectedPlan?.cycle
+      }
+      
       const result = await makeApiRequest(
-        () => apiClient.get('/api/stripe'),
+        () => apiClient.post('/api/stripe', requestData),
         {
           context: 'Getting subscription URL',
           customErrorMessage: 'Failed to get subscription link. Please try again.',
@@ -121,30 +134,9 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
   }
 
   const renderPlanDetails = () => {
-    if (!selectedPlan || !plans[selectedPlan]) return null
+    if (!selectedPlan || !plans[selectedPlan.type]) return null
 
-    // If user is Pro and trying to access Pro plan, show message about existing subscription
-    if (isProUser && selectedPlan === 'pro') {
-      return (
-        <Card className="mb-6 transition-all duration-200 border-2 border-green-500 bg-green-50 dark:bg-green-950/20">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-center">
-              <div className="text-center">
-                <CardTitle className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
-                   <Check className="h-5 w-5" />
-                   You already have a Pro subscription!
-                 </CardTitle>
-                 <CardDescription className="mt-2">
-                   You can purchase additional credits for extra features
-                 </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-      )
-    }
-
-    const plan = plans[selectedPlan]
+    const plan = plans[selectedPlan.type]
 
     return (
       <Card className="mb-6 transition-all duration-200 hover:shadow-lg border-2">
@@ -162,8 +154,12 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
               <CardDescription>{plan.description}</CardDescription>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">{plan.price}</div>
-              <div className="text-sm text-muted-foreground">{plan.period}</div>
+              <div className="text-2xl font-bold">
+                {selectedPlan.price ? `$${selectedPlan.price}` : plan.price}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {selectedPlan.cycle === 'annually' ? 'per year' : plan.period}
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -182,7 +178,7 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
   }
 
   const renderCreditPackages = () => {
-    if (selectedPlan !== 'credits') return null
+    if (selectedPlan?.type !== 'credits') return null
 
     return (
       <div className="space-y-3 mb-6">
@@ -227,23 +223,15 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
   }
 
   const handlePayment = () => {
-    if (selectedPlan === 'pro') {
-      if (isProUser) {
-        toast({
-          title: 'Subscription Already Active',
-          description: 'You already have an active Pro subscription. You can purchase additional credits.',
-          variant: 'default',
-        })
-        return
-      }
+    if (selectedPlan?.type === 'pro') {
       handleSubscription()
-    } else if (selectedPlan === 'credits' && selectedCreditPackage) {
+    } else if (selectedPlan?.type === 'credits' && selectedCreditPackage) {
       handleBuyCredits(selectedCreditPackage)
     }
   }
 
   const isPaymentDisabled = () => {
-    if (selectedPlan === 'credits') {
+    if (selectedPlan?.type === 'credits') {
       return !selectedCreditPackage || isLoading
     }
     return isLoading
@@ -251,11 +239,10 @@ export function PaymentModal({ isOpen, onClose, selectedPlan, isProUser = false 
 
   const getButtonText = () => {
     if (isLoading) return 'Processing...'
-    if (selectedPlan === 'pro') {
-      if (isProUser) return 'Subscription Active'
-      return 'Subscribe Now'
+    if (selectedPlan?.type === 'pro') {
+      return `Subscribe ${selectedPlan.cycle === 'annually' ? 'Annually' : 'Monthly'}`
     }
-    if (selectedPlan === 'credits') {
+    if (selectedPlan?.type === 'credits') {
       if (!selectedCreditPackage) return 'Select Package'
       return `Buy ${selectedCreditPackage} Credits`
     }

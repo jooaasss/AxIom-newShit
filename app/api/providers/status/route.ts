@@ -44,7 +44,7 @@ function getEnvKeyForProvider(provider: AIProvider): string {
     groq: 'GROQ_API_KEY',
     gemini: 'GOOGLE_GEMINI_API_KEY',
     cohere: 'COHERE_API_KEY',
-    huggingface: 'QWEN_API_KEY',
+    huggingface: 'HUGGING_FACE_API_KEY',
     grok: 'GROK_API_KEY',
     deepseek: 'DEEPSEEK_API_KEY',
     github: 'GITHUB_TOKEN'
@@ -58,7 +58,7 @@ function getDefaultModel(provider: AIProvider): string {
     groq: 'llama-3.1-8b-instant',
     gemini: 'gemini-1.5-flash',
     cohere: 'command-r',
-    huggingface: 'meta-llama/Llama-2-70b-chat-hf',
+    huggingface: 'Qwen/Qwen2.5-Coder-32B-Instruct',
     grok: 'grok-beta',
     deepseek: 'deepseek-chat',
     github: 'meta-llama/Llama-3.2-3B-Instruct'
@@ -84,6 +84,9 @@ export async function GET(req: NextRequest) {
       // Check service API keys (environment variables)
       providersToCheck = getAvailableProviders()
     } else {
+      if (!prisma) {
+        return NextResponse.json({ error: 'Database connection not available' }, { status: 500 })
+      }
       // Check user API keys from database
       const userKeys = await prisma.userAPIKey.findMany({
         where: { userId },
