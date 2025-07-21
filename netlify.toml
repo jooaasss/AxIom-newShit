@@ -14,17 +14,7 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# API routes should not be redirected
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/___netlify-handler"
-  status = 200
-
-# All other routes go to Next.js
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Let @netlify/plugin-nextjs handle all routing
 
 # Headers for security
 [[headers]]
