@@ -83,7 +83,9 @@ export async function POST(req: Request) {
     return NextResponse.json(generation)
   } catch (error) {
     console.error('[CODE_GENERATION] Detailed error:', error)
-    console.error('[CODE_GENERATION] Error stack:', error.stack)
-    return new NextResponse(`Internal Error: ${error.message}`, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace'
+    console.error('[CODE_GENERATION] Error stack:', errorStack)
+    return new NextResponse(`Internal Error: ${errorMessage}`, { status: 500 })
   }
 }

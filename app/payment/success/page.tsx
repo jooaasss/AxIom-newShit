@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,7 +8,10 @@ import { CheckCircle, Loader } from 'lucide-react'
 import { apiClient, makeApiRequest } from '@/lib/axios-interceptor'
 import { useToast } from '@/components/ui/use-toast'
 
-export default function PaymentSuccessPage() {
+// Disable static generation for this page
+export const dynamic = 'force-dynamic'
+
+function PaymentSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -113,5 +116,20 @@ export default function PaymentSuccessPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto py-20">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <Loader className="h-8 w-8 animate-spin" />
+          <p>Loading...</p>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   )
 }

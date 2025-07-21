@@ -46,7 +46,8 @@ function getEnvKeyForProvider(provider: AIProvider): string {
     cohere: 'COHERE_API_KEY',
     huggingface: 'QWEN_API_KEY',
     grok: 'GROK_API_KEY',
-    deepseek: 'DEEPSEEK_API_KEY'
+    deepseek: 'DEEPSEEK_API_KEY',
+    github: 'GITHUB_TOKEN'
   }
   return envKeys[provider]
 }
@@ -59,7 +60,8 @@ function getDefaultModel(provider: AIProvider): string {
     cohere: 'command-r',
     huggingface: 'meta-llama/Llama-2-70b-chat-hf',
     grok: 'grok-beta',
-    deepseek: 'deepseek-chat'
+    deepseek: 'deepseek-chat',
+    github: 'meta-llama/Llama-3.2-3B-Instruct'
   }
   return defaultModels[provider]
 }

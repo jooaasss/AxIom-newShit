@@ -392,7 +392,8 @@ export async function generateCode(
     }
   } catch (error) {
     console.error('Code generation error:', error)
-    throw new Error(`Code generation failed: ${error.message}`)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    throw new Error(`Code generation failed: ${errorMessage}`)
   }
 }
 
@@ -884,6 +885,7 @@ export function getAvailableProviders(): AIProvider[] {
   if (process.env.QWEN_API_KEY) providers.push('huggingface')
   if (process.env.GROK_API_KEY) providers.push('grok')
   if (process.env.DEEPSEEK_API_KEY) providers.push('deepseek')
+  if (process.env.GITHUB_TOKEN) providers.push('github')
   
   return providers
 }
@@ -931,5 +933,11 @@ export const PROVIDER_INFO = {
     description: 'Advanced reasoning and coding models',
     icon: '🔍',
     color: 'from-blue-600 to-indigo-600',
+  },
+  github: {
+    name: 'GitHub Models',
+    description: 'GitHub AI models via Azure',
+    icon: '🐙',
+    color: 'from-gray-700 to-gray-900',
   },
 }
